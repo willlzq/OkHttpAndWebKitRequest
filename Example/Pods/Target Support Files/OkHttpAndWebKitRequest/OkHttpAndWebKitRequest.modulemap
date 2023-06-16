@@ -1,0 +1,6 @@
+framework module OkHttpAndWebKitRequest {
+  umbrella header "OkHttpAndWebKitRequest-umbrella.h"
+
+  export *
+  module * { export * }
+}

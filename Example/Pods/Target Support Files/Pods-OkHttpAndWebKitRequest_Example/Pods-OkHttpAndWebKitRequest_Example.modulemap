@@ -1,0 +1,6 @@
+framework module Pods_OkHttpAndWebKitRequest_Example {
+  umbrella header "Pods-OkHttpAndWebKitRequest_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}
