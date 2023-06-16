@@ -13,8 +13,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Installation
 
-OkHttpAndWebKitRequest is available through [CocoaPods](https://cocoapods.org). To install
-it, simply add the following line to your Podfile:
+  通过HTTP或WEBKIT来完整获取网页的HTML
 
 ```ruby
 pod 'OkHttpAndWebKitRequest'
