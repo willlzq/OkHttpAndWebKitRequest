@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'OkHttpAndWebKitRequest'
-  s.version          = '0.1.0'
+  s.version          = '1.0'
   s.summary          = '通过HTTP或WEBKIT来完整获取网页的HTML'
 
 # This description is used to generate tags and improve search results.
@@ -18,8 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
-                       DESC
+  通过HTTP或UIWEBKIT来完整获取网页的HTML
 
   s.homepage         = 'https://github.com/willlzq/OkHttpAndWebKitRequest'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
