@@ -37,8 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		06FECFB89490EC7A262951F1 /* OkHttpAndWebKitRequest.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = OkHttpAndWebKitRequest.podspec; path = ../OkHttpAndWebKitRequest.podspec; sourceTree = "<group>"; };
-		081C770AEBDB243833B5B220 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		06FECFB89490EC7A262951F1 /* OkHttpAndWebKitRequest.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = OkHttpAndWebKitRequest.podspec; path = ../OkHttpAndWebKitRequest.podspec; sourceTree = "<group>"; };
+		081C770AEBDB243833B5B220 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		18A15F4053AA3F52ECD381A9 /* Pods-OkHttpAndWebKitRequest_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OkHttpAndWebKitRequest_Example.release.xcconfig"; path = "Target Support Files/Pods-OkHttpAndWebKitRequest_Example/Pods-OkHttpAndWebKitRequest_Example.release.xcconfig"; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* OkHttpAndWebKitRequest_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OkHttpAndWebKitRequest_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -60,7 +60,7 @@
 		6003F5BB195388D20070C39A /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
 		71719F9E1E33DC2100824A3D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		8146651155B779E7F82EA641 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		8146651155B779E7F82EA641 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		871B8C3E527321F93C999013 /* Pods-OkHttpAndWebKitRequest_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OkHttpAndWebKitRequest_Example.debug.xcconfig"; path = "Target Support Files/Pods-OkHttpAndWebKitRequest_Example/Pods-OkHttpAndWebKitRequest_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		90906B1CCB38ADF787B8C3A7 /* Pods-OkHttpAndWebKitRequest_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OkHttpAndWebKitRequest_Tests.release.xcconfig"; path = "Target Support Files/Pods-OkHttpAndWebKitRequest_Tests/Pods-OkHttpAndWebKitRequest_Tests.release.xcconfig"; sourceTree = "<group>"; };
@@ -103,7 +103,6 @@
 				97720DAA0501D85F26093A3A /* Pods-OkHttpAndWebKitRequest_Tests.debug.xcconfig */,
 				90906B1CCB38ADF787B8C3A7 /* Pods-OkHttpAndWebKitRequest_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -259,6 +258,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -520,6 +520,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OkHttpAndWebKitRequest/OkHttpAndWebKitRequest-Prefix.pch";
 				INFOPLIST_FILE = "OkHttpAndWebKitRequest/OkHttpAndWebKitRequest-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -536,6 +537,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OkHttpAndWebKitRequest/OkHttpAndWebKitRequest-Prefix.pch";
 				INFOPLIST_FILE = "OkHttpAndWebKitRequest/OkHttpAndWebKitRequest-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
