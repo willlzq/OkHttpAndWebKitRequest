@@ -8,6 +8,8 @@
 #import "OkHttpAndWebKitRequest.h"
 #import "NSData+GZIP.h"
 #import <CommonCrypto/CommonDigest.h>
+#import "UniversalDetector.h"
+
 @implementation NSData (Encoding)
 - (NSString *)ChinaString
 {
@@ -188,7 +190,8 @@ static  AFHTTPSessionManager *sharedmanager;
 static  NSString* sharedUserAgent;
 static NSMutableDictionary<NSString*,NovelWebKitRequest *>* sharedWebviewDictionary;
 static  NSString* sharedFilterHtmlJS;
- 
+static  NSString* sharedautoSearchJS;
+
 +(NSURLSessionDataTask *)Request:(NSInteger)page   query:(NSString*)query   htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion{
     return [OkHttpAndWebKitRequest  Request: page   query:query postString:nil htmlCompletion:htmlCompletion] ;
 }
@@ -282,9 +285,22 @@ static  NSString* sharedFilterHtmlJS;
                 if(html==nil){
                     html=[unzipDT GBKString];
                 }
-                if(html==nil){
-                    html=[unzipDT utf8String];
+              if(html==nil){
+                NSStringEncoding enc=NSUTF8StringEncoding;
+                @try {
+                    CFStringEncodings encode= [UniversalDetector encodingWithData:unzipDT];
+                    enc=    CFStringConvertEncodingToNSStringEncoding(encode);
                 }
+                @catch (NSException *exception) {
+               
+                }
+                //utf8String
+                if(enc==NSUTF8StringEncoding){
+                    html =[unzipDT utf8String];
+                }else{
+                    html = [[NSString alloc] initWithData:unzipDT encoding:enc];
+                }
+              }
                 NSArray<NSHTTPCookie *> *cookies=  [NSHTTPCookie cookiesWithResponseHeaderFields:rep.allHeaderFields  forURL:response.URL];
                 NSHTTPCookieStorage *httpcookie=[NSHTTPCookieStorage sharedHTTPCookieStorage];
                 for (NSHTTPCookie *cookie in cookies) {
@@ -437,10 +453,10 @@ static  NSString* sharedFilterHtmlJS;
 }
 + (NSArray<NSString*>*)UserAgentList{
     return @[
-        @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36",
-        @"Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36 Edg/100.0.1185.29",
-       @"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 SLBrowser/8.0.0.2242 SLBChan/105",
-        @"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36 OPR/85.0.4341.60"
+        @"Mozilla/5.0 (Macintosh; Intel Mac OS X 13_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36",
+        @"Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.4896.60 Safari/537.36 Edg/100.0.1185.29",
+       @"Mozilla/5.0 (Windows NT 11.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 SLBrowser/8.0.0.2242 SLBChan/105",
+        @"Mozilla/5.0 (Windows NT 11.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36 OPR/85.0.4341.60"
   ];
 }
     
@@ -495,7 +511,7 @@ static  NSString* sharedFilterHtmlJS;
     if (self.htmlCompletion==nil || self.isEnd) {
         return;
     }
-   [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(SendHtml) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(SendHtml) object:nil];
     [self performSelector:@selector(SendHtml) withObject:nil afterDelay:15];
 }
  
@@ -510,7 +526,7 @@ static  NSString* sharedFilterHtmlJS;
         return;
     }
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
-    [self performSelector:@selector(SendHtml) withObject:nil afterDelay:3.5];
+    [self performSelector:@selector(SendHtml) withObject:nil afterDelay:4.0];
 }
 -(void)SendHtml{
     __weak __typeof(self) weakSelf = self;
@@ -614,8 +630,6 @@ static  NSString* sharedFilterHtmlJS;
 }
 -(void)clear{
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
-//    [self.webview.configuration.userContentController removeAllUserScripts];
-//    [self.webview.configuration.userContentController removeAllContentRuleLists];
     self.htmlCompletion = nil;
     if (!self.isEnd) {
         self.isEnd=YES;
@@ -637,4 +651,183 @@ static  NSString* sharedFilterHtmlJS;
 -(void)dealloc{
     webLog(@"OkHttpAndWebKitRequest dealloc");
 }
+@end
+
+
+
+@interface AutoSubmitSearchByWebKit ()<WKNavigationDelegate>
+@property (nonatomic, strong) WKNavigationResponse * navigationResponse;
+@property (nonatomic, strong)  WKWebView *webview;
+@property (nonatomic, assign)  bool isHomeEnd;
+@property (nonatomic, assign)  bool isRedirectEnd;
+@property (nonatomic, strong)  NSURL *requestUrl;
+
+@end
+@implementation AutoSubmitSearchByWebKit
+ 
+-(void)request:(NSString*)url{
+    self.isHomeEnd=NO;
+    self.isRedirectEnd=NO;
+    self.webview=[WKWebView  new];
+    self.webview.navigationDelegate=self;
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    if ((int)[window.subviews indexOfObject:self.webview]<0) {
+        self.webview.bounds= CGRectMake([UIApplication sharedApplication].keyWindow.bounds.size.width*2.25, [UIApplication sharedApplication].keyWindow.bounds.size.height*2.25, window.bounds.size.width, window.bounds.size.height) ;
+        self.webview.hidden=YES;
+ 
+        [window addSubview:self.webview];
+        [window sendSubviewToBack: self.webview];
+        self.webview.customUserAgent=[OkHttpAndWebKitRequest  CurrentUserAgent];
+
+   }
+    self.requestUrl=[NSURL URLWithString:url];
+
+    NSMutableURLRequest *webrequest=[NSMutableURLRequest requestWithURL:self.requestUrl cachePolicy: NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+     [OkHttpAndWebKitRequest ApplyHttpHeaders:webrequest];
+     [self.webview loadRequest: webrequest];
+}
+#pragma mark - WKNavigationDelegate
+
+/**
+ *  页面开始加载时调用
+ *
+ *  @param webView    实现该代理的webview
+ *  @param navigation 当前navigation
+ */
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
+    webLog(@"didStartProvisionalNavigation=%@",webView.URL);
+}
+
+/**
+ *  当内容开始返回时调用
+ *
+ *  @param webView    实现该代理的webview
+ *  @param navigation 当前navigation
+ */
+
+- (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation {
+ 
+    if (self.isHomeEnd) {
+        return;
+    }
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(SendHtml) object:nil];
+    [self performSelector:@selector(SendHtml) withObject:nil afterDelay:7];
+}
+/**
+ *  页面加载完成之后调用
+ *
+ *  @param webView    实现该代理的webview
+ *  @param navigation 当前navigation
+ */
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+    if (self.isHomeEnd) {
+        return;
+    }
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [self performSelector:@selector(SendHtml) withObject:nil afterDelay:1.0];
+
+
+}
+-(void)SendHtml{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    self.isHomeEnd=YES;
+    if (sharedautoSearchJS==nil) {
+         NSBundle *bundle = [NSBundle bundleForClass:OkHttpAndWebKitRequest.class];
+        NSURL *bundleURL = [bundle URLForResource:@"OkHttpAndWebKitRequest" withExtension:@"bundle"];
+        NSBundle *resourceBundle = [NSBundle bundleWithURL: bundleURL];
+        NSString *filePath =  [resourceBundle pathForResource:@"autoSubmitSearch" ofType:@"js"];
+        sharedautoSearchJS = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+    }
+    [self.webview evaluateJavaScript:sharedautoSearchJS  completionHandler:^(id _Nullable innerHTML, NSError * _Nullable innererror) {
+    }];
+}
+ 
+/**
+ *  加载失败时调用
+ *
+ *  @param webView    实现该代理的webview
+ *  @param navigation 当前navigation
+ *  @param error      错误
+ */
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
+     webLog(@"didFailProvisionalNavigation=%@",error);
+    if(self.redirectCompletion){
+        self.redirectCompletion(webView.URL.absoluteString,(NSHTTPURLResponse*)self.navigationResponse.response,error);
+        self.redirectCompletion = nil;
+    }
+    self.isHomeEnd=YES;
+}
+
+/**
+ *  接收到服务器跳转请求之后调用
+ *
+ *  @param webView      实现该代理的webview
+ *  @param navigation   当前navigation
+ */
+- (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation {
+    webLog(@"didReceiveServerRedirectForProvisionalNavigation %@", webView.URL);
+}
+
+/**
+ *  在收到响应后，决定是否跳转
+ *
+ *  @param webView            实现该代理的webview
+ *  @param navigationResponse 当前navigation
+ *  @param decisionHandler    是否跳转block
+ */
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
+     webLog(@"decidePolicyForNavigationResponse %@ forMainFrame=%d",navigationResponse.response.URL, navigationResponse.forMainFrame);
+      self.navigationResponse=navigationResponse;
+      BOOL isHomeUrl=((navigationResponse.response.URL.path.length==0 ||[navigationResponse.response.URL.path isEqualToString:@"/"] ) && navigationResponse.response.URL.query.length==0);
+    
+    if(isHomeUrl && [navigationResponse.response.URL.host isEqualToString:self.requestUrl.host]){
+        decisionHandler(WKNavigationResponsePolicyAllow);
+        return;
+    }else  if(!isHomeUrl && self.isHomeEnd  && !self.isRedirectEnd  && [navigationResponse.response.URL.absoluteString containsString:self.requestUrl.host]){
+        //发生了站内跳转
+        self.isRedirectEnd=YES;
+        if(self.redirectCompletion){
+            self.redirectCompletion(navigationResponse.response.URL.absoluteString,(NSHTTPURLResponse*)self.navigationResponse.response,nil);
+        }
+    }
+    decisionHandler(WKNavigationResponsePolicyCancel);
+}
+
+/**
+ *  在发送请求之前，决定是否跳转
+ *
+ *  @param webView          实现该代理的webview
+ *  @param navigationAction 当前navigation
+ *  @param decisionHandler  是否调转block
+ */
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+    if ((navigationAction.navigationType==WKNavigationTypeOther|| navigationAction.navigationType==WKNavigationTypeLinkActivated) && [navigationAction.request.URL.scheme.lowercaseString hasPrefix:@"http"] && ![webView.URL.UrlDomain isEqualToString: navigationAction.request.URL.UrlDomain]) {
+         decisionHandler(WKNavigationActionPolicyCancel);
+    }else{
+        decisionHandler(WKNavigationActionPolicyAllow);
+    }
+}
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction preferences:(WKWebpagePreferences *)preferences decisionHandler:(void (^)(WKNavigationActionPolicy, WKWebpagePreferences *))decisionHandler API_AVAILABLE(macos(10.15), ios(13.0)){
+    webLog(@"navigationAction.request=%@  navigationAction.navigationType=%ld navigationAction.targetFrame.isMainFrame=%d",navigationAction.request,(long)navigationAction.navigationType,navigationAction.targetFrame.isMainFrame);
+      preferences.preferredContentMode=WKContentModeDesktop;
+      decisionHandler(WKNavigationActionPolicyAllow,preferences);
+}
+-(void)clear{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [self.webview.configuration.userContentController removeAllUserScripts];
+    [self.webview.configuration.userContentController removeAllContentRuleLists];
+    self.redirectCompletion = nil;
+    [self.webview stopLoading];
+    [self.webview removeFromSuperview];
+}
+-(void)cancel{
+    if (NSThread.isMainThread) {
+        [self clear];
+    }else{
+        dispatch_async(dispatch_get_main_queue(), ^{
+             [self clear];
+         });
+    }
+}
+ 
 @end

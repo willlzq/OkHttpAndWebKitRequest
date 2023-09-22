@@ -15,6 +15,8 @@
 
 typedef void (^HtmlDataCompleteHandler)(NSString* url,NSHTTPURLResponse *httpResponse, id  jsonDocument, NSError *error);
 typedef BOOL(^NetCancelBlock)(id obj);
+typedef void (^FetchSubmitUrlCompletionHandler)(NSString* redirectUrl,NSHTTPURLResponse *httpResponse,  NSError *error);
+
 NS_ASSUME_NONNULL_BEGIN
 @interface NSData (Encoding)
 - (NSString *)utf8String;
@@ -49,10 +51,10 @@ typedef void (^webkit_End_Completion)(BOOL isend);
 -(void)evaluateHtml:(HtmlDataCompleteHandler)completionHandler;
 -(void)cancel;
 @end
-
-//@interface FetchPCSiteSearchWithWebKit : NSObject
-//@property(nonatomic,copy) PCSiteSearch_UrlCompletion htmlCompletion;
-//-(void)requestWeb:(NSString*)url;
-//-(void)cancel;
-//@end
+//自动提交搜索，并返回搜索地址
+@interface AutoSubmitSearchByWebKit : NSObject
+@property(nonatomic,copy) FetchSubmitUrlCompletionHandler redirectCompletion;
+-(void)request:(NSString*)url;
+-(void)cancel;
+@end
 NS_ASSUME_NONNULL_END
