@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'OkHttpAndWebKitRequest'
-  s.version          = '1.1'
+  s.version          = '1.2'
   s.summary          = '通过HTTP或WEBKIT来完整获取网页的HTML'
 
 # This description is used to generate tags and improve search results.
@@ -37,7 +37,8 @@ Pod::Spec.new do |s|
      'OkHttpAndWebKitRequest' => ['OkHttpAndWebKitRequest/Assets/*.js']
    }
 
-   s.frameworks = 'UIKit', 'MapKit'
+   s.frameworks = 'UIKit'
    s.dependency 'GZIP'
    s.dependency 'AFNetworking'
+   s.dependency 'UniversalDetector'
 end

@@ -275,6 +275,9 @@ static  NSString* sharedFilterHtmlJS;
                     html=[unzipDT utf8String];
                 }else if ([contenttype containsString:@"gb2312"] || [contenttype containsString:@"gbk"]){
                     html=[unzipDT GBKString];
+                    if(html==nil){
+                        html=[unzipDT GB2312KString];
+                    }
                 }
                 if(html==nil){
                     html=[unzipDT GBKString];

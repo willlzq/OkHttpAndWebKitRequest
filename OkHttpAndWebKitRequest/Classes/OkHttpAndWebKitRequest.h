@@ -42,10 +42,17 @@ NS_ASSUME_NONNULL_BEGIN
 +(NSString*)CurrentUserAgent;
 @end
 typedef void (^webkit_End_Completion)(BOOL isend);
+
 @interface NovelWebKitRequest : NSObject
 @property(nonatomic,copy) HtmlDataCompleteHandler htmlCompletion;
 -(void)requestWeb:(NSString*)url endHandler:(webkit_End_Completion)endHandler;
 -(void)evaluateHtml:(HtmlDataCompleteHandler)completionHandler;
 -(void)cancel;
 @end
+
+//@interface FetchPCSiteSearchWithWebKit : NSObject
+//@property(nonatomic,copy) PCSiteSearch_UrlCompletion htmlCompletion;
+//-(void)requestWeb:(NSString*)url;
+//-(void)cancel;
+//@end
 NS_ASSUME_NONNULL_END
