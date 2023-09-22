@@ -1,0 +1,6 @@
+framework module UniversalDetector {
+  umbrella header "UniversalDetector-umbrella.h"
+
+  export *
+  module * { export * }
+}
