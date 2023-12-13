@@ -543,7 +543,7 @@ static  NSString* sharedautoSearchJS;
             if (weakSelf.isEnd) {
                 return;
             }
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 weakSelf.isEnd=YES;
                 if (weakSelf.endHandler) {
                     weakSelf.endHandler(YES);
@@ -605,8 +605,20 @@ static  NSString* sharedautoSearchJS;
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
       webLog(@"decidePolicyForNavigationResponse %@ forMainFrame=%d",navigationResponse.response.URL, navigationResponse.forMainFrame);
       self.navigationResponse=navigationResponse;
-      decisionHandler(WKNavigationResponsePolicyAllow);
-}
+    NSInteger statusCode= ((NSHTTPURLResponse *)navigationResponse.response).statusCode;
+    if (statusCode >=400) {
+        decisionHandler(WKNavigationResponsePolicyCancel);
+        if (self.htmlCompletion) {
+            self.htmlCompletion(webView.URL.absoluteString,(NSHTTPURLResponse*)self.navigationResponse.response,@"",[NSError errorWithDomain:NSOSStatusErrorDomain code:statusCode  userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"%ld - 找不到文件或目录或者服务器出现错误",(long)statusCode]}]);
+             self.htmlCompletion = nil;
+             self.isEnd=YES;
+        }
+        if (self.endHandler) {
+            self.endHandler(YES);
+        }
+    }else {
+        decisionHandler(WKNavigationResponsePolicyAllow);
+    }}
 
 /**
  *  在发送请求之前，决定是否跳转

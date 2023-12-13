@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'OkHttpAndWebKitRequest'
-  s.version          = '1.2'
+  s.version          = '1.3'
   s.summary          = '通过HTTP或WEBKIT来完整获取网页的HTML'
 
 # This description is used to generate tags and improve search results.

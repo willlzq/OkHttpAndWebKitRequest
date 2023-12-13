@@ -12,6 +12,7 @@
 		088BBCB082061E998C54B19A7800DC37 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57221B54D014471C3D3E1925EFC917C8 /* Foundation.framework */; };
 		089A86D0EE44557BFF9F5247A36DE88A /* UniversalDetector-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 65C546A668E4DFFA506E4E8ACB97D579 /* UniversalDetector-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0FC2C7300D3DE350BD73741888D9A1A8 /* AFSecurityPolicy.h in Headers */ = {isa = PBXBuildFile; fileRef = 4373DD6E3C34BE77B5C18BCE0FAE6E86 /* AFSecurityPolicy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		181AD79D2B29509F0072BAD6 /* WebKitNoImageAndMedia.json in Resources */ = {isa = PBXBuildFile; fileRef = 181AD79C2B29509F0072BAD6 /* WebKitNoImageAndMedia.json */; };
 		18AD75662ABDEF1B00E537A4 /* autoSubmitSearch.js in Resources */ = {isa = PBXBuildFile; fileRef = 18AD75642ABDEF0C00E537A4 /* autoSubmitSearch.js */; };
 		18AEFCE986FB74A0B6B092B3BA2267C6 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1FF3A63FDEB024682729FEC56B6207 /* UIImageView+AFNetworking.m */; };
 		1A35F4626C8C00AC79B455CC5B3072DE /* nsEUCTWProber.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 177A1CBB0F362C6A5410AB93C8AFB4DB /* nsEUCTWProber.cpp */; };
@@ -215,7 +216,7 @@
 
 /* Begin PBXFileReference section */
 		008C5633EDC8B13C01129C16EA3F456B /* uchardet.cpp */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = uchardet.cpp; path = external/uchardet/src/uchardet.cpp; sourceTree = "<group>"; };
-		02440B28A21B86826FFD67CEF2F0C9B6 /* OkHttpAndWebKitRequest.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = OkHttpAndWebKitRequest.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		02440B28A21B86826FFD67CEF2F0C9B6 /* OkHttpAndWebKitRequest.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = OkHttpAndWebKitRequest.podspec; sourceTree = "<group>"; tabWidth = 2; };
 		03095D62D90CA723850CC5ACDEB8526A /* nsGB2312Prober.cpp */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = nsGB2312Prober.cpp; path = external/uchardet/src/nsGB2312Prober.cpp; sourceTree = "<group>"; };
 		03117D504F7FBD5486FC123C03FEEC12 /* AFNetworking-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "AFNetworking-dummy.m"; sourceTree = "<group>"; };
 		03B2B5E9613A8428254F160937DA95CC /* GZIP */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = GZIP; path = GZIP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -229,6 +230,7 @@
 		1021B657E5EBF2C8B6553DDA17AD8422 /* AFNetworking.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AFNetworking.release.xcconfig; sourceTree = "<group>"; };
 		177A1CBB0F362C6A5410AB93C8AFB4DB /* nsEUCTWProber.cpp */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = nsEUCTWProber.cpp; path = external/uchardet/src/nsEUCTWProber.cpp; sourceTree = "<group>"; };
 		17FD3DB4F8318ACEA300A256B7898087 /* nsCodingStateMachine.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = nsCodingStateMachine.h; path = external/uchardet/src/nsCodingStateMachine.h; sourceTree = "<group>"; };
+		181AD79C2B29509F0072BAD6 /* WebKitNoImageAndMedia.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = WebKitNoImageAndMedia.json; path = OkHttpAndWebKitRequest/Assets/WebKitNoImageAndMedia.json; sourceTree = "<group>"; };
 		18AD75642ABDEF0C00E537A4 /* autoSubmitSearch.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = autoSubmitSearch.js; path = OkHttpAndWebKitRequest/Assets/autoSubmitSearch.js; sourceTree = "<group>"; };
 		19019C3ECF52CB2539AF0E54A2963FF0 /* AFAutoPurgingImageCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFAutoPurgingImageCache.m; path = "UIKit+AFNetworking/AFAutoPurgingImageCache.m"; sourceTree = "<group>"; };
 		199CAC055D78A7096812EB98190317D5 /* UIButton+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIButton+AFNetworking.h"; path = "UIKit+AFNetworking/UIButton+AFNetworking.h"; sourceTree = "<group>"; };
@@ -837,6 +839,7 @@
 		F973CC1A01C9BE47E12E4D49FD06621B /* OkHttpAndWebKitRequest */ = {
 			isa = PBXGroup;
 			children = (
+				181AD79C2B29509F0072BAD6 /* WebKitNoImageAndMedia.json */,
 				18AD75642ABDEF0C00E537A4 /* autoSubmitSearch.js */,
 				090F5D76107FD075E951FD30E1D1F730 /* OkHttpAndWebKitRequest.h */,
 				F8C2A3BC353FDA7CA934C24F3F4898EE /* OkHttpAndWebKitRequest.m */,
@@ -1193,6 +1196,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				181AD79D2B29509F0072BAD6 /* WebKitNoImageAndMedia.json in Resources */,
 				3D9765CF88C94E5C2686EE1C6F51450F /* removeNoDisplayHtml.js in Resources */,
 				18AD75662ABDEF1B00E537A4 /* autoSubmitSearch.js in Resources */,
 			);
