@@ -13,7 +13,7 @@
 @implementation NSData (Encoding)
 - (NSString *)ChinaString
 {
-   // int bodyLength = [self parseHeader:self];//解析数据长度
+    // int bodyLength = [self parseHeader:self];//解析数据长度
     unsigned  char *pData =(unsigned  char *)[self bytes];
     int returnLen = 0;
     returnLen = pData[3];
@@ -21,14 +21,14 @@
     NSStringEncoding strEncode = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);//解决中文乱码
     NSData * subData=self;
     if(returnLen<=([self length]-5)){
-           subData= [self subdataWithRange:NSMakeRange(5, returnLen)];//读取body
+        subData= [self subdataWithRange:NSMakeRange(5, returnLen)];//读取body
     }
     return   [[NSString alloc] initWithData:subData encoding:strEncode];
-  
+    
 }
 - (NSString *)GBKString
 {
-
+    
     NSStringEncoding strEncode = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);//解决中文
     return   [[NSString alloc] initWithData:self encoding:strEncode];
     
@@ -184,7 +184,7 @@
     return md5string;
 }
 @end
- 
+
 @implementation OkHttpAndWebKitRequest
 static  AFHTTPSessionManager *sharedmanager;
 static  NSString* sharedUserAgent;
@@ -203,13 +203,13 @@ static  NSString* sharedautoSearchJS;
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
     if (postString!=nil) {
         [request setHTTPMethod:@"POST"];
-      //  [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type" ];
+        //  [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type" ];
         [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-
+        
         [request setValue:@"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" forHTTPHeaderField:@"Accept" ];
         [request setHTTPBody:[postString  dataUsingEncoding:NSUTF8StringEncoding]];
     }
-   [OkHttpAndWebKitRequest  ApplyHttpHeaders:request];
+    [OkHttpAndWebKitRequest  ApplyHttpHeaders:request];
     NSURLSessionDataTask *dataTask  =[http dataTaskWithRequest:request uploadProgress:^(NSProgress * _Nonnull uploadProgress) {
     } downloadProgress:^(NSProgress * _Nonnull downloadProgress) {
         
@@ -248,7 +248,7 @@ static  NSString* sharedautoSearchJS;
                     location=[OkHttpAndWebKitRequest  checkWindowLocation:html baseUlr:requestUrl];
                 }
                 if (location.length>7) {
-                     //主动跳转
+                    //主动跳转
                     webLog(@"location=%@",location);
                     if (page<=10) {
                         //跳转次数不能大于10次
@@ -266,33 +266,33 @@ static  NSString* sharedautoSearchJS;
             return;
         }else{
             NSHTTPURLResponse *rep=(NSHTTPURLResponse *)response;
-       
-                NSData *unzipDT=(NSData *)responseObject;
-                NSDictionary *headers=rep.allHeaderFields;
-                if ( [[headers objectForKey:@"Content-Encoding"]  isEqualToString:@"gzip"] ) {
-                    unzipDT= [(NSData*)responseObject gunzippedData];
-                }
-                NSString *html=nil;
-                NSString *contenttype=[[headers objectForKey:@"Content-Type"] lowercaseString] ;
-                if ([contenttype containsString:@"utf-8"]){
-                    html=[unzipDT utf8String];
-                }else if ([contenttype containsString:@"gb2312"] || [contenttype containsString:@"gbk"]){
-                    html=[unzipDT GBKString];
-                    if(html==nil){
-                        html=[unzipDT GB2312KString];
-                    }
-                }
+            
+            NSData *unzipDT=(NSData *)responseObject;
+            NSDictionary *headers=rep.allHeaderFields;
+            if ( [[headers objectForKey:@"Content-Encoding"]  isEqualToString:@"gzip"] ) {
+                unzipDT= [(NSData*)responseObject gunzippedData];
+            }
+            NSString *html=nil;
+            NSString *contenttype=[[headers objectForKey:@"Content-Type"] lowercaseString] ;
+            if ([contenttype containsString:@"utf-8"]){
+                html=[unzipDT utf8String];
+            }else if ([contenttype containsString:@"gb2312"] || [contenttype containsString:@"gbk"]){
+                html=[unzipDT GBKString];
                 if(html==nil){
-                    html=[unzipDT GBKString];
+                    html=[unzipDT GB2312KString];
                 }
-              if(html==nil){
+            }
+            if(html==nil){
+                html=[unzipDT GBKString];
+            }
+            if(html==nil){
                 NSStringEncoding enc=NSUTF8StringEncoding;
                 @try {
                     CFStringEncodings encode= [UniversalDetector encodingWithData:unzipDT];
                     enc=    CFStringConvertEncodingToNSStringEncoding(encode);
                 }
                 @catch (NSException *exception) {
-               
+                    
                 }
                 //utf8String
                 if(enc==NSUTF8StringEncoding){
@@ -300,18 +300,18 @@ static  NSString* sharedautoSearchJS;
                 }else{
                     html = [[NSString alloc] initWithData:unzipDT encoding:enc];
                 }
-              }
-                NSArray<NSHTTPCookie *> *cookies=  [NSHTTPCookie cookiesWithResponseHeaderFields:rep.allHeaderFields  forURL:response.URL];
-                NSHTTPCookieStorage *httpcookie=[NSHTTPCookieStorage sharedHTTPCookieStorage];
-                for (NSHTTPCookie *cookie in cookies) {
-                    [httpcookie setCookie:cookie];
-                }
-                htmlCompletion(rep.URL.absoluteString,rep,html,nil);
-              }
-      
+            }
+            NSArray<NSHTTPCookie *> *cookies=  [NSHTTPCookie cookiesWithResponseHeaderFields:rep.allHeaderFields  forURL:response.URL];
+            NSHTTPCookieStorage *httpcookie=[NSHTTPCookieStorage sharedHTTPCookieStorage];
+            for (NSHTTPCookie *cookie in cookies) {
+                [httpcookie setCookie:cookie];
+            }
+            htmlCompletion(rep.URL.absoluteString,rep,html,nil);
+        }
+        
     }];
     [dataTask resume];
-  
+    
     return  dataTask;
 }
 //head请求
@@ -321,8 +321,8 @@ static  NSString* sharedautoSearchJS;
     NSURL *URL  = [NSURL URLWithString:requestUrl];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
     request.HTTPMethod = @"HEAD";
-
-   [OkHttpAndWebKitRequest  ApplyHttpHeaders:request];
+    
+    [OkHttpAndWebKitRequest  ApplyHttpHeaders:request];
     NSURLSessionDataTask *dataTask  =[http dataTaskWithRequest:request uploadProgress:^(NSProgress * _Nonnull uploadProgress) {
     } downloadProgress:^(NSProgress * _Nonnull downloadProgress) {
         
@@ -331,7 +331,7 @@ static  NSString* sharedautoSearchJS;
         htmlCompletion(rep.URL.absoluteString,rep,nil,nil);
     }];
     [dataTask resume];
-  
+    
     return  dataTask;
 }
 +(NSString*)RegexTheFirstMatchValue:(NSRegularExpression*)regex  input:(NSString*)input{
@@ -342,7 +342,7 @@ static  NSString* sharedautoSearchJS;
     return [input substringWithRange:firstMatch.range];
 }
 +(NSString*)checkWindowLocation:(NSString*)html baseUlr:(NSString*)requestURL{
-      NSString* location=  [OkHttpAndWebKitRequest RegexTheFirstMatchValue: [NSRegularExpression regularExpressionWithPattern:@"((self|this|parent|window|)[.]){0,1}location.href(\\s){0,}=(\\s){0,}\"(.)*?\"" options:NSRegularExpressionCaseInsensitive error:nil]   input:html];
+    NSString* location=  [OkHttpAndWebKitRequest RegexTheFirstMatchValue: [NSRegularExpression regularExpressionWithPattern:@"((self|this|parent|window|)[.]){0,1}location.href(\\s){0,}=(\\s){0,}\"(.)*?\"" options:NSRegularExpressionCaseInsensitive error:nil]   input:html];
     if (location.length>=2 ) {
         NSString* href=  [OkHttpAndWebKitRequest RegexTheFirstMatchValue:[NSRegularExpression regularExpressionWithPattern:@"\"(.)*?\"" options:NSRegularExpressionCaseInsensitive error:nil] input:location];
         href= [[href stringByReplacingOccurrencesOfString:@"\"" withString:@""] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -378,45 +378,45 @@ static  NSString* sharedautoSearchJS;
                 webKitObj=[NovelWebKitRequest new];
                 [sharedWebviewDictionary setObject:webKitObj forKey:webkey];
                 webKitObj.htmlCompletion =htmlCompletion;
-    
+                
                 [webKitObj requestWeb: requestUrl endHandler:^(BOOL isend) {
-                   //用完即清除对象
-                   [[sharedWebviewDictionary objectForKey:webkey] cancel];
-                   [sharedWebviewDictionary removeObjectForKey:webkey];
-               }];
-               if (cancelBlock(webKitObj)) {
-                   [webKitObj cancel];
-                   [sharedWebviewDictionary removeObjectForKey:webkey];
-               }
+                    //用完即清除对象
+                    [[sharedWebviewDictionary objectForKey:webkey] cancel];
+                    [sharedWebviewDictionary removeObjectForKey:webkey];
+                }];
+                if (cancelBlock(webKitObj)) {
+                    [webKitObj cancel];
+                    [sharedWebviewDictionary removeObjectForKey:webkey];
+                }
             }else{
                 //已经存在
                 webKitObj=[sharedWebviewDictionary objectForKey:webkey];
                 [webKitObj  evaluateHtml:htmlCompletion];
                 return;
             }
-   
+            
         });
- 
+        
     }
 }
- 
+
 +(void)ApplyHttpHeaders:(NSMutableURLRequest *)request{
-     request.timeoutInterval=120;
-     [request setValue:[OkHttpAndWebKitRequest  CurrentUserAgent]  forHTTPHeaderField:@"User-Agent" ];
-     [request setValue:@"gzip, deflate, sdch" forHTTPHeaderField:@"Accept-Encoding" ];
-     [request setValue:@"zh-CN,zh;q=0.8" forHTTPHeaderField:@"Accept-Language" ];
-     [request setValue:@"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" forHTTPHeaderField:@"Accept" ];
-//    NSString *key=[NSString stringWithFormat:@"%@://%@",request.URL.scheme,request.URL.host];
-//    [request setValue: key forHTTPHeaderField:@"Referer"];
+    request.timeoutInterval=120;
+    [request setValue:[OkHttpAndWebKitRequest  CurrentUserAgent]  forHTTPHeaderField:@"User-Agent" ];
+    [request setValue:@"gzip, deflate, sdch" forHTTPHeaderField:@"Accept-Encoding" ];
+    [request setValue:@"zh-CN,zh;q=0.8" forHTTPHeaderField:@"Accept-Language" ];
+    [request setValue:@"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" forHTTPHeaderField:@"Accept" ];
+    //    NSString *key=[NSString stringWithFormat:@"%@://%@",request.URL.scheme,request.URL.host];
+    //    [request setValue: key forHTTPHeaderField:@"Referer"];
     [request setHTTPShouldHandleCookies:YES];
     @synchronized (sharedUserAgent) {
         if (request.URL) {
             NSArray<NSHTTPCookie *> *cookies=[[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:request.URL ];
             NSMutableString *cookiestr=[NSMutableString string];
             for (NSHTTPCookie *cookie in cookies) {
-         //   webLog(@"%@-->cookie:%@=%@",cookie.domain,[cookie name], [cookie value]);
+                //   webLog(@"%@-->cookie:%@=%@",cookie.domain,[cookie name], [cookie value]);
                 [cookiestr appendFormat:@"%@=%@;", [cookie name], [cookie value]];
-             }
+            }
             if (cookiestr.length>0) {
                 [request setValue:cookiestr forHTTPHeaderField:@"Cookie"];
             }
@@ -435,12 +435,12 @@ static  NSString* sharedautoSearchJS;
         sharedmanager = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:configuration];
         AFHTTPResponseSerializer *Serializer=[AFHTTPResponseSerializer serializer];
         Serializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/json",@"text/javascript",@"text/html",@"text/plain",@"application/octet-stream",@"application/x-gzip",@"application/zip", @"audio/wav" ,@"audio/mp3",@"audio/x-mpegurl",@"application/x-rar-compressed", @"*.*",nil];
- 
+        
         sharedmanager.responseSerializer = Serializer;
         sharedmanager.securityPolicy.allowInvalidCertificates = YES;
         [sharedmanager.securityPolicy setValidatesDomainName:NO];
         [sharedmanager setCompletionQueue: dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
-      });
+    });
     return sharedmanager;
 }
 +(NSString*)CurrentUserAgent{
@@ -455,11 +455,36 @@ static  NSString* sharedautoSearchJS;
     return @[
         @"Mozilla/5.0 (Macintosh; Intel Mac OS X 13_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36",
         @"Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.4896.60 Safari/537.36 Edg/100.0.1185.29",
-       @"Mozilla/5.0 (Windows NT 11.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 SLBrowser/8.0.0.2242 SLBChan/105",
+        @"Mozilla/5.0 (Windows NT 11.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 SLBrowser/8.0.0.2242 SLBChan/105",
         @"Mozilla/5.0 (Windows NT 11.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36 OPR/85.0.4341.60"
-  ];
+    ];
 }
-    
+
+@end
+static  WKContentRuleList* sharedWKContentRuleList;
+@implementation WKWebView (ContentRule)
+-(void)addNoImageContentRule{
+    WKUserContentController *userContentController=self.configuration.userContentController;
+    if(sharedWKContentRuleList==nil){
+        NSBundle *bundle = [NSBundle bundleForClass:OkHttpAndWebKitRequest.class];
+        NSURL *bundleURL = [bundle URLForResource:@"OkHttpAndWebKitRequest" withExtension:@"bundle"];
+        NSBundle *resourceBundle = [NSBundle bundleWithURL: bundleURL];
+        NSString *filePath =  [resourceBundle pathForResource:@"WebKitNoImageAndMedia" ofType:@"json"];
+        NSString*jsonStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+        [[WKContentRuleListStore defaultStore] compileContentRuleListForIdentifier:@"__WKWebView__NoNoImageAndMediaContentRule__" encodedContentRuleList: jsonStr completionHandler:^(WKContentRuleList *contentRuleList, NSError *error) {
+            if (error==nil){
+                sharedWKContentRuleList=contentRuleList;
+                [userContentController addContentRuleList:sharedWKContentRuleList];
+                NSLog(@"启动无图模式成功-->%@",contentRuleList);
+            }else{
+                NSLog(@"启动无图模式失败-->%@",error);
+            }
+        }];
+    }else{
+        [userContentController addContentRuleList:sharedWKContentRuleList];
+        NSLog(@"启动无图模式成功");
+    }
+}
 @end
 @interface NovelWebKitRequest ()<WKNavigationDelegate>
 @property (nonatomic, strong) WKNavigationResponse * navigationResponse;
@@ -472,6 +497,7 @@ static  NSString* sharedautoSearchJS;
 -(void)requestWeb:(NSString*)url endHandler:(webkit_End_Completion)endHandler{
     self.isEnd=NO;
     self.webview=[WKWebView  new];
+    [self.webview addNoImageContentRule];
     self.endHandler=endHandler;
     self.webview.navigationDelegate=self;
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
@@ -481,10 +507,10 @@ static  NSString* sharedautoSearchJS;
         [window addSubview:self.webview];
         [window sendSubviewToBack: self.webview];
         self.webview.customUserAgent=[OkHttpAndWebKitRequest  CurrentUserAgent];
-   }
+    }
     NSMutableURLRequest *webrequest=[NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy: NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-     [OkHttpAndWebKitRequest  ApplyHttpHeaders:webrequest];
-     self.isHomeUrl=((webrequest.URL.path.length==0 ||[webrequest.URL.path isEqualToString:@"/"] ) && webrequest.URL.query.length==0);
+    [OkHttpAndWebKitRequest  ApplyHttpHeaders:webrequest];
+    self.isHomeUrl=((webrequest.URL.path.length==0 ||[webrequest.URL.path isEqualToString:@"/"] ) && webrequest.URL.query.length==0);
     [self.webview loadRequest: webrequest];
 }
 #pragma mark - WKNavigationDelegate
@@ -496,7 +522,7 @@ static  NSString* sharedautoSearchJS;
  *  @param navigation 当前navigation
  */
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
-     webLog(@"didStartProvisionalNavigation=%@",webView.URL);
+    webLog(@"didStartProvisionalNavigation=%@",webView.URL);
 }
 
 /**
@@ -507,14 +533,14 @@ static  NSString* sharedautoSearchJS;
  */
 
 - (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation {
-     webLog(@"didCommitNavigation=%@",webView.title);
+    webLog(@"didCommitNavigation=%@",webView.title);
     if (self.htmlCompletion==nil || self.isEnd) {
         return;
     }
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(SendHtml) object:nil];
     [self performSelector:@selector(SendHtml) withObject:nil afterDelay:15];
 }
- 
+
 /**
  *  页面加载完成之后调用
  *
@@ -548,10 +574,10 @@ static  NSString* sharedautoSearchJS;
                 if (weakSelf.endHandler) {
                     weakSelf.endHandler(YES);
                 }
-
+                
             });
         });
-
+        
     }];
 }
 -(void)evaluateHtml:(HtmlDataCompleteHandler)completionHandler{
@@ -563,7 +589,7 @@ static  NSString* sharedautoSearchJS;
                 completionHandler(url,(NSHTTPURLResponse*)weakSelf.navigationResponse.response,innerHTML,innererror);
             }
         });
-
+        
     }];
 }
 /**
@@ -574,11 +600,11 @@ static  NSString* sharedautoSearchJS;
  *  @param error      错误
  */
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
-     webLog(@"didFailProvisionalNavigation=%@",error);
+    webLog(@"didFailProvisionalNavigation=%@",error);
     if (self.htmlCompletion) {
         self.htmlCompletion(webView.URL.absoluteString,(NSHTTPURLResponse*)self.navigationResponse.response,@"",error);
-         self.htmlCompletion = nil;
-         self.isEnd=YES;
+        self.htmlCompletion = nil;
+        self.isEnd=YES;
     }
     if (self.endHandler) {
         self.endHandler(YES);
@@ -603,15 +629,15 @@ static  NSString* sharedautoSearchJS;
  *  @param decisionHandler    是否跳转block
  */
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
-      webLog(@"decidePolicyForNavigationResponse %@ forMainFrame=%d",navigationResponse.response.URL, navigationResponse.forMainFrame);
-      self.navigationResponse=navigationResponse;
+    webLog(@"decidePolicyForNavigationResponse %@ forMainFrame=%d",navigationResponse.response.URL, navigationResponse.forMainFrame);
+    self.navigationResponse=navigationResponse;
     NSInteger statusCode= ((NSHTTPURLResponse *)navigationResponse.response).statusCode;
     if (statusCode >=400) {
         decisionHandler(WKNavigationResponsePolicyCancel);
         if (self.htmlCompletion) {
             self.htmlCompletion(webView.URL.absoluteString,(NSHTTPURLResponse*)self.navigationResponse.response,@"",[NSError errorWithDomain:NSOSStatusErrorDomain code:statusCode  userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"%ld - 找不到文件或目录或者服务器出现错误",(long)statusCode]}]);
-             self.htmlCompletion = nil;
-             self.isEnd=YES;
+            self.htmlCompletion = nil;
+            self.isEnd=YES;
         }
         if (self.endHandler) {
             self.endHandler(YES);
@@ -637,8 +663,8 @@ static  NSString* sharedautoSearchJS;
 }
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction preferences:(WKWebpagePreferences *)preferences decisionHandler:(void (^)(WKNavigationActionPolicy, WKWebpagePreferences *))decisionHandler API_AVAILABLE(macos(10.15), ios(13.0)){
     webLog(@"navigationAction.request=%@  navigationAction.navigationType=%ld navigationAction.targetFrame.isMainFrame=%d",navigationAction.request,(long)navigationAction.navigationType,navigationAction.targetFrame.isMainFrame);
-      preferences.preferredContentMode=WKContentModeDesktop;
-      decisionHandler(WKNavigationActionPolicyAllow,preferences);
+    preferences.preferredContentMode=WKContentModeDesktop;
+    decisionHandler(WKNavigationActionPolicyAllow,preferences);
 }
 -(void)clear{
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
@@ -656,8 +682,8 @@ static  NSString* sharedautoSearchJS;
         [self clear];
     }else{
         dispatch_async(dispatch_get_main_queue(), ^{
-             [self clear];
-         });
+            [self clear];
+        });
     }
 }
 -(void)dealloc{
@@ -676,27 +702,28 @@ static  NSString* sharedautoSearchJS;
 
 @end
 @implementation AutoSubmitSearchByWebKit
- 
+
 -(void)request:(NSString*)url{
     self.isHomeEnd=NO;
     self.isRedirectEnd=NO;
     self.webview=[WKWebView  new];
+    [self.webview addNoImageContentRule];
     self.webview.navigationDelegate=self;
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
     if ((int)[window.subviews indexOfObject:self.webview]<0) {
         self.webview.bounds= CGRectMake([UIApplication sharedApplication].keyWindow.bounds.size.width*2.25, [UIApplication sharedApplication].keyWindow.bounds.size.height*2.25, window.bounds.size.width, window.bounds.size.height) ;
         self.webview.hidden=YES;
- 
+        
         [window addSubview:self.webview];
         [window sendSubviewToBack: self.webview];
         self.webview.customUserAgent=[OkHttpAndWebKitRequest  CurrentUserAgent];
-
-   }
+        
+    }
     self.requestUrl=[NSURL URLWithString:url];
-
+    
     NSMutableURLRequest *webrequest=[NSMutableURLRequest requestWithURL:self.requestUrl cachePolicy: NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-     [OkHttpAndWebKitRequest ApplyHttpHeaders:webrequest];
-     [self.webview loadRequest: webrequest];
+    [OkHttpAndWebKitRequest ApplyHttpHeaders:webrequest];
+    [self.webview loadRequest: webrequest];
 }
 #pragma mark - WKNavigationDelegate
 
@@ -718,7 +745,7 @@ static  NSString* sharedautoSearchJS;
  */
 
 - (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation {
- 
+    
     if (self.isHomeEnd) {
         return;
     }
@@ -737,14 +764,14 @@ static  NSString* sharedautoSearchJS;
     }
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     [self performSelector:@selector(SendHtml) withObject:nil afterDelay:1.0];
-
-
+    
+    
 }
 -(void)SendHtml{
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     self.isHomeEnd=YES;
     if (sharedautoSearchJS==nil) {
-         NSBundle *bundle = [NSBundle bundleForClass:OkHttpAndWebKitRequest.class];
+        NSBundle *bundle = [NSBundle bundleForClass:OkHttpAndWebKitRequest.class];
         NSURL *bundleURL = [bundle URLForResource:@"OkHttpAndWebKitRequest" withExtension:@"bundle"];
         NSBundle *resourceBundle = [NSBundle bundleWithURL: bundleURL];
         NSString *filePath =  [resourceBundle pathForResource:@"autoSubmitSearch" ofType:@"js"];
@@ -753,7 +780,7 @@ static  NSString* sharedautoSearchJS;
     [self.webview evaluateJavaScript:sharedautoSearchJS  completionHandler:^(id _Nullable innerHTML, NSError * _Nullable innererror) {
     }];
 }
- 
+
 /**
  *  加载失败时调用
  *
@@ -762,7 +789,7 @@ static  NSString* sharedautoSearchJS;
  *  @param error      错误
  */
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
-     webLog(@"didFailProvisionalNavigation=%@",error);
+    webLog(@"didFailProvisionalNavigation=%@",error);
     if(self.redirectCompletion){
         self.redirectCompletion(webView.URL.absoluteString,(NSHTTPURLResponse*)self.navigationResponse.response,error);
         self.redirectCompletion = nil;
@@ -788,21 +815,32 @@ static  NSString* sharedautoSearchJS;
  *  @param decisionHandler    是否跳转block
  */
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
-     webLog(@"decidePolicyForNavigationResponse %@ forMainFrame=%d",navigationResponse.response.URL, navigationResponse.forMainFrame);
-      self.navigationResponse=navigationResponse;
-      BOOL isHomeUrl=((navigationResponse.response.URL.path.length==0 ||[navigationResponse.response.URL.path isEqualToString:@"/"] ) && navigationResponse.response.URL.query.length==0);
-    
-    if(isHomeUrl && [navigationResponse.response.URL.host isEqualToString:self.requestUrl.host]){
-        decisionHandler(WKNavigationResponsePolicyAllow);
-        return;
-    }else  if(!isHomeUrl && self.isHomeEnd  && !self.isRedirectEnd  && [navigationResponse.response.URL.absoluteString containsString:self.requestUrl.host]){
-        //发生了站内跳转
-        self.isRedirectEnd=YES;
+    webLog(@"decidePolicyForNavigationResponse %@ forMainFrame=%d",navigationResponse.response.URL, navigationResponse.forMainFrame);
+    self.navigationResponse=navigationResponse;
+    NSInteger statusCode= ((NSHTTPURLResponse *)navigationResponse.response).statusCode;
+    if (statusCode >=400) {
+        decisionHandler(WKNavigationResponsePolicyCancel);
         if(self.redirectCompletion){
-            self.redirectCompletion(navigationResponse.response.URL.absoluteString,(NSHTTPURLResponse*)self.navigationResponse.response,nil);
+            self.redirectCompletion(webView.URL.absoluteString,(NSHTTPURLResponse*)self.navigationResponse.response,[NSError errorWithDomain:NSOSStatusErrorDomain code:statusCode  userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"%ld - 找不到文件或目录或者服务器出现错误",(long)statusCode]}]);
+            self.redirectCompletion = nil;
         }
+        self.isHomeEnd=YES;
+        
+    }else {
+        BOOL isHomeUrl=((navigationResponse.response.URL.path.length==0 ||[navigationResponse.response.URL.path isEqualToString:@"/"] ) && navigationResponse.response.URL.query.length==0);
+        if(isHomeUrl && [navigationResponse.response.URL.host isEqualToString:self.requestUrl.host]){
+            decisionHandler(WKNavigationResponsePolicyAllow);
+            return;
+        }else  if(!isHomeUrl && self.isHomeEnd  && !self.isRedirectEnd  && [navigationResponse.response.URL.absoluteString containsString:self.requestUrl.host]){
+            //发生了站内跳转
+            self.isRedirectEnd=YES;
+            if(self.redirectCompletion){
+                self.redirectCompletion(navigationResponse.response.URL.absoluteString,(NSHTTPURLResponse*)self.navigationResponse.response,nil);
+            }
+        }
+        decisionHandler(WKNavigationResponsePolicyCancel);
+        
     }
-    decisionHandler(WKNavigationResponsePolicyCancel);
 }
 
 /**
@@ -814,15 +852,15 @@ static  NSString* sharedautoSearchJS;
  */
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     if ((navigationAction.navigationType==WKNavigationTypeOther|| navigationAction.navigationType==WKNavigationTypeLinkActivated) && [navigationAction.request.URL.scheme.lowercaseString hasPrefix:@"http"] && ![webView.URL.UrlDomain isEqualToString: navigationAction.request.URL.UrlDomain]) {
-         decisionHandler(WKNavigationActionPolicyCancel);
+        decisionHandler(WKNavigationActionPolicyCancel);
     }else{
         decisionHandler(WKNavigationActionPolicyAllow);
     }
 }
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction preferences:(WKWebpagePreferences *)preferences decisionHandler:(void (^)(WKNavigationActionPolicy, WKWebpagePreferences *))decisionHandler API_AVAILABLE(macos(10.15), ios(13.0)){
     webLog(@"navigationAction.request=%@  navigationAction.navigationType=%ld navigationAction.targetFrame.isMainFrame=%d",navigationAction.request,(long)navigationAction.navigationType,navigationAction.targetFrame.isMainFrame);
-      preferences.preferredContentMode=WKContentModeDesktop;
-      decisionHandler(WKNavigationActionPolicyAllow,preferences);
+    preferences.preferredContentMode=WKContentModeDesktop;
+    decisionHandler(WKNavigationActionPolicyAllow,preferences);
 }
 -(void)clear{
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
@@ -837,9 +875,9 @@ static  NSString* sharedautoSearchJS;
         [self clear];
     }else{
         dispatch_async(dispatch_get_main_queue(), ^{
-             [self clear];
-         });
+            [self clear];
+        });
     }
 }
- 
+
 @end

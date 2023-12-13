@@ -34,7 +34,7 @@ Pod::Spec.new do |s|
   s.source_files = 'OkHttpAndWebKitRequest/Classes/**/*'
   
    s.resource_bundles = {
-     'OkHttpAndWebKitRequest' => ['OkHttpAndWebKitRequest/Assets/*.js']
+     'OkHttpAndWebKitRequest' => ['OkHttpAndWebKitRequest/Assets/*.js','OkHttpAndWebKitRequest/Assets/*.json']
    }
 
    s.frameworks = 'UIKit'

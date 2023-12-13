@@ -44,7 +44,9 @@ NS_ASSUME_NONNULL_BEGIN
 +(NSString*)CurrentUserAgent;
 @end
 typedef void (^webkit_End_Completion)(BOOL isend);
-
+@interface WKWebView (ContentRule)
+-(void)addNoImageContentRule;
+@end
 @interface NovelWebKitRequest : NSObject
 @property(nonatomic,copy) HtmlDataCompleteHandler htmlCompletion;
 -(void)requestWeb:(NSString*)url endHandler:(webkit_End_Completion)endHandler;
