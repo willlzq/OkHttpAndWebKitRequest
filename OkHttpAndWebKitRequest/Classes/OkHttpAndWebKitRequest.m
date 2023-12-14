@@ -354,7 +354,7 @@ static  NSString* sharedautoSearchJS;
     }
     return nil;
 }
-+(void)webRequestByURL:(BOOL)isHttpMode requestUrl:(NSString*)requestUrl  htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion   cancelBlock:(NetCancelBlock)cancelBlock{
++(void)webRequestByURL:(BOOL)isHttpMode requestUrl:(NSString*)requestUrl WebKitParas:(NSDictionary*)webKitParas  htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion cancelBlock:(NetCancelBlock)cancelBlock{
     if (isHttpMode) {
         NSURLSessionDataTask * datatask=  [OkHttpAndWebKitRequest   Request:0   query:requestUrl htmlCompletion:htmlCompletion];
         if (cancelBlock(datatask)) {
@@ -378,7 +378,12 @@ static  NSString* sharedautoSearchJS;
                 webKitObj=[NovelWebKitRequest new];
                 [sharedWebviewDictionary setObject:webKitObj forKey:webkey];
                 webKitObj.htmlCompletion =htmlCompletion;
-                
+                if(webKitParas && [[webKitParas objectForKey:kWebKit_isAutoClickMulu] boolValue]){
+                    webKitObj.isAutoClick=YES;
+                }
+                if(webKitParas && [webKitParas objectForKey:kWebKit_customUserAgent]){
+                    webKitObj.customUserAgent=[webKitParas objectForKey:kWebKit_customUserAgent];
+                }
                 [webKitObj requestWeb: requestUrl endHandler:^(BOOL isend) {
                     //用完即清除对象
                     [[sharedWebviewDictionary objectForKey:webkey] cancel];
@@ -485,6 +490,17 @@ static  WKContentRuleList* sharedWKContentRuleList;
         NSLog(@"启动无图模式成功");
     }
 }
+-(void)AddAutoClickUserScript{
+    WKUserContentController *userContentController=self.configuration.userContentController;
+    NSBundle *bundle = [NSBundle bundleForClass:OkHttpAndWebKitRequest.class];
+    NSURL *bundleURL = [bundle URLForResource:@"OkHttpAndWebKitRequest" withExtension:@"bundle"];
+    NSBundle *resourceBundle = [NSBundle bundleWithURL: bundleURL];
+    NSString *filePath =  [resourceBundle pathForResource:@"clickPageListMulu" ofType:@"js"];
+    NSString*jsStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+   WKUserScript *clickHiddenAllMuluScript = [[WKUserScript alloc] initWithSource:jsStr injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
+   [userContentController addUserScript:clickHiddenAllMuluScript];
+    NSLog(@"启动隐藏目录自动点击成功");
+}
 @end
 @interface NovelWebKitRequest ()<WKNavigationDelegate>
 @property (nonatomic, strong) WKNavigationResponse * navigationResponse;
@@ -498,6 +514,9 @@ static  WKContentRuleList* sharedWKContentRuleList;
     self.isEnd=NO;
     self.webview=[WKWebView  new];
     [self.webview addNoImageContentRule];
+    if(self.isAutoClick){
+        [self.webview AddAutoClickUserScript];
+    }
     self.endHandler=endHandler;
     self.webview.navigationDelegate=self;
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
@@ -506,8 +525,9 @@ static  WKContentRuleList* sharedWKContentRuleList;
         self.webview.hidden=YES;
         [window addSubview:self.webview];
         [window sendSubviewToBack: self.webview];
-        self.webview.customUserAgent=[OkHttpAndWebKitRequest  CurrentUserAgent];
+       // self.webview.customUserAgent=[OkHttpAndWebKitRequest  CurrentUserAgent];
     }
+    self.webview.customUserAgent=self.customUserAgent.length>0?self.customUserAgent:[OkHttpAndWebKitRequest  CurrentUserAgent];
     NSMutableURLRequest *webrequest=[NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy: NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     [OkHttpAndWebKitRequest  ApplyHttpHeaders:webrequest];
     self.isHomeUrl=((webrequest.URL.path.length==0 ||[webrequest.URL.path isEqualToString:@"/"] ) && webrequest.URL.query.length==0);

@@ -12,7 +12,8 @@
 #else
 #define webLog(...)
 #endif
-
+#define kWebKit_isAutoClickMulu @"__isAutoClickMulu__"
+#define kWebKit_customUserAgent @"__customUserAgent__"
 typedef void (^HtmlDataCompleteHandler)(NSString* url,NSHTTPURLResponse *httpResponse, id  jsonDocument, NSError *error);
 typedef BOOL(^NetCancelBlock)(id obj);
 typedef void (^FetchSubmitUrlCompletionHandler)(NSString* redirectUrl,NSHTTPURLResponse *httpResponse,  NSError *error);
@@ -37,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 +(NSURLSessionDataTask *)Request:(NSInteger)page     query:(NSString*)query  postString:(NSString*)postString htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion;
 
 +(NSURLSessionDataTask *)HeadRequest:(NSString*)requestUrl htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion;
-+(void)webRequestByURL:(BOOL)isHttpMode requestUrl:(NSString*)requestUrl htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion cancelBlock:(NetCancelBlock)cancelBlock;
++(void)webRequestByURL:(BOOL)isHttpMode requestUrl:(NSString*)requestUrl WebKitParas:(NSDictionary*)webKitParas  htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion cancelBlock:(NetCancelBlock)cancelBlock;
 
 +(void)ApplyHttpHeaders:(NSMutableURLRequest *)request;
 +(AFHTTPSessionManager *)defualtSessionManager;
@@ -46,9 +47,12 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void (^webkit_End_Completion)(BOOL isend);
 @interface WKWebView (ContentRule)
 -(void)addNoImageContentRule;
+-(void)AddAutoClickUserScript;
 @end
 @interface NovelWebKitRequest : NSObject
 @property(nonatomic,copy) HtmlDataCompleteHandler htmlCompletion;
+@property (nonatomic, assign)  bool isAutoClick;
+@property(nonatomic,strong) NSString *customUserAgent;
 -(void)requestWeb:(NSString*)url endHandler:(webkit_End_Completion)endHandler;
 -(void)evaluateHtml:(HtmlDataCompleteHandler)completionHandler;
 -(void)cancel;
