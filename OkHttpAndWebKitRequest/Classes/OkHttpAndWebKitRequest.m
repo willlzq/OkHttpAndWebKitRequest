@@ -183,6 +183,14 @@
     
     return md5string;
 }
++(NSString*)loadBundleResource:(NSString*)fileName ofType:(NSString*)ofType{
+    NSBundle *bundle = [NSBundle bundleForClass:OkHttpAndWebKitRequest.class];
+    NSURL *bundleURL = [bundle URLForResource:@"OkHttpAndWebKitRequest" withExtension:@"bundle"];
+    NSBundle *resourceBundle = [NSBundle bundleWithURL: bundleURL];
+    NSString *filePath =  [resourceBundle pathForResource:fileName ofType:ofType];
+    NSString*text = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+    return text;
+}
 @end
 
 @implementation OkHttpAndWebKitRequest
@@ -193,9 +201,9 @@ static  NSString* sharedFilterHtmlJS;
 static  NSString* sharedautoSearchJS;
 
 +(NSURLSessionDataTask *)Request:(NSInteger)page   query:(NSString*)query   htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion{
-    return [OkHttpAndWebKitRequest  Request: page   query:query postString:nil htmlCompletion:htmlCompletion] ;
+    return [OkHttpAndWebKitRequest  Request: page   query:query postString:nil WebKitParas:nil  htmlCompletion:htmlCompletion] ;
 }
-+(NSURLSessionDataTask *)Request:(NSInteger)page    query:(NSString*)query  postString:(NSString*)postString htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion{
++(NSURLSessionDataTask *)Request:(NSInteger)page    query:(NSString*)query  postString:(NSString*)postString WebKitParas:(NSDictionary*)webKitParas  htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion{
     AFHTTPSessionManager *http=[OkHttpAndWebKitRequest   defualtSessionManager];
     NSString *requestUrl=query;
     webLog(@"requestUrl=%@",requestUrl);
@@ -210,6 +218,13 @@ static  NSString* sharedautoSearchJS;
         [request setHTTPBody:[postString  dataUsingEncoding:NSUTF8StringEncoding]];
     }
     [OkHttpAndWebKitRequest  ApplyHttpHeaders:request];
+    if(webKitParas && [webKitParas objectForKey:kWebKit_customUserAgent]){
+        [request setValue:[webKitParas objectForKey:kWebKit_customUserAgent]  forHTTPHeaderField:@"User-Agent" ];
+        
+    }
+    if(webKitParas && [webKitParas objectForKey:kWebKit_Referer]){
+        [request setValue:[webKitParas objectForKey:kWebKit_Referer]  forHTTPHeaderField:@"Referer" ];
+    }
     NSURLSessionDataTask *dataTask  =[http dataTaskWithRequest:request uploadProgress:^(NSProgress * _Nonnull uploadProgress) {
     } downloadProgress:^(NSProgress * _Nonnull downloadProgress) {
         
@@ -356,7 +371,7 @@ static  NSString* sharedautoSearchJS;
 }
 +(void)webRequestByURL:(BOOL)isHttpMode requestUrl:(NSString*)requestUrl WebKitParas:(NSDictionary*)webKitParas  htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion cancelBlock:(NetCancelBlock)cancelBlock{
     if (isHttpMode) {
-        NSURLSessionDataTask * datatask=  [OkHttpAndWebKitRequest   Request:0   query:requestUrl htmlCompletion:htmlCompletion];
+        NSURLSessionDataTask * datatask=  [OkHttpAndWebKitRequest   Request:0   query:requestUrl postString:nil WebKitParas:webKitParas  htmlCompletion:htmlCompletion];
         if (cancelBlock(datatask)) {
             [datatask cancel];
         }
@@ -378,12 +393,7 @@ static  NSString* sharedautoSearchJS;
                 webKitObj=[NovelWebKitRequest new];
                 [sharedWebviewDictionary setObject:webKitObj forKey:webkey];
                 webKitObj.htmlCompletion =htmlCompletion;
-                if(webKitParas && [[webKitParas objectForKey:kWebKit_isAutoClickMulu] boolValue]){
-                    webKitObj.isAutoClick=YES;
-                }
-                if(webKitParas && [webKitParas objectForKey:kWebKit_customUserAgent]){
-                    webKitObj.customUserAgent=[webKitParas objectForKey:kWebKit_customUserAgent];
-                }
+                webKitObj.webKitParas =webKitParas;
                 [webKitObj requestWeb: requestUrl endHandler:^(BOOL isend) {
                     //用完即清除对象
                     [[sharedWebviewDictionary objectForKey:webkey] cancel];
@@ -468,14 +478,11 @@ static  NSString* sharedautoSearchJS;
 @end
 static  WKContentRuleList* sharedWKContentRuleList;
 @implementation WKWebView (ContentRule)
+
 -(void)addNoImageContentRule{
     WKUserContentController *userContentController=self.configuration.userContentController;
     if(sharedWKContentRuleList==nil){
-        NSBundle *bundle = [NSBundle bundleForClass:OkHttpAndWebKitRequest.class];
-        NSURL *bundleURL = [bundle URLForResource:@"OkHttpAndWebKitRequest" withExtension:@"bundle"];
-        NSBundle *resourceBundle = [NSBundle bundleWithURL: bundleURL];
-        NSString *filePath =  [resourceBundle pathForResource:@"WebKitNoImageAndMedia" ofType:@"json"];
-        NSString*jsonStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+        NSString*jsonStr = [NSString loadBundleResource:@"WebKitNoImageAndMedia" ofType:@"json"];
         [[WKContentRuleListStore defaultStore] compileContentRuleListForIdentifier:@"__WKWebView__NoNoImageAndMediaContentRule__" encodedContentRuleList: jsonStr completionHandler:^(WKContentRuleList *contentRuleList, NSError *error) {
             if (error==nil){
                 sharedWKContentRuleList=contentRuleList;
@@ -492,13 +499,9 @@ static  WKContentRuleList* sharedWKContentRuleList;
 }
 -(void)AddAutoClickUserScript{
     WKUserContentController *userContentController=self.configuration.userContentController;
-    NSBundle *bundle = [NSBundle bundleForClass:OkHttpAndWebKitRequest.class];
-    NSURL *bundleURL = [bundle URLForResource:@"OkHttpAndWebKitRequest" withExtension:@"bundle"];
-    NSBundle *resourceBundle = [NSBundle bundleWithURL: bundleURL];
-    NSString *filePath =  [resourceBundle pathForResource:@"clickPageListMulu" ofType:@"js"];
-    NSString*jsStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-   WKUserScript *clickHiddenAllMuluScript = [[WKUserScript alloc] initWithSource:jsStr injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
-   [userContentController addUserScript:clickHiddenAllMuluScript];
+    NSString*jsStr = [NSString loadBundleResource:@"clickPageListMulu" ofType:@"js"];
+    WKUserScript *clickHiddenAllMuluScript = [[WKUserScript alloc] initWithSource:jsStr injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
+    [userContentController addUserScript:clickHiddenAllMuluScript];
     NSLog(@"启动隐藏目录自动点击成功");
 }
 @end
@@ -514,9 +517,16 @@ static  WKContentRuleList* sharedWKContentRuleList;
     self.isEnd=NO;
     self.webview=[WKWebView  new];
     [self.webview addNoImageContentRule];
-    if(self.isAutoClick){
+    if([self ValueByWebKitParas:kWebKit_isAutoClickMulu]){
         [self.webview AddAutoClickUserScript];
     }
+    if(self.webKitParas && [self.webKitParas objectForKey:kWebKit_customUserAgent]){
+        self.customUserAgent=[self.webKitParas objectForKey:kWebKit_customUserAgent];
+    }
+    if(self.webKitParas && [self.webKitParas objectForKey:kWebKit_Referer]){
+        self.referer=[self.webKitParas objectForKey:kWebKit_Referer];
+    }
+    
     self.endHandler=endHandler;
     self.webview.navigationDelegate=self;
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
@@ -525,13 +535,21 @@ static  WKContentRuleList* sharedWKContentRuleList;
         self.webview.hidden=YES;
         [window addSubview:self.webview];
         [window sendSubviewToBack: self.webview];
-       // self.webview.customUserAgent=[OkHttpAndWebKitRequest  CurrentUserAgent];
     }
     self.webview.customUserAgent=self.customUserAgent.length>0?self.customUserAgent:[OkHttpAndWebKitRequest  CurrentUserAgent];
     NSMutableURLRequest *webrequest=[NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy: NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     [OkHttpAndWebKitRequest  ApplyHttpHeaders:webrequest];
+    if(self.referer.length>0){
+        [webrequest setValue: self.referer forHTTPHeaderField:@"Referer"];
+    }
     self.isHomeUrl=((webrequest.URL.path.length==0 ||[webrequest.URL.path isEqualToString:@"/"] ) && webrequest.URL.query.length==0);
     [self.webview loadRequest: webrequest];
+}
+-(BOOL)ValueByWebKitParas:(NSString*)key{
+    if(self.webKitParas && [[self.webKitParas objectForKey:key] boolValue]){
+        return YES;
+    }
+    return NO;
 }
 #pragma mark - WKNavigationDelegate
 
@@ -574,10 +592,20 @@ static  WKContentRuleList* sharedWKContentRuleList;
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     [self performSelector:@selector(SendHtml) withObject:nil afterDelay:4.0];
 }
+-(NSString*)evaluateHtmlJS{
+    NSMutableString *jsCode=[NSMutableString string];
+    if([self ValueByWebKitParas:kWebKit_isLinkOnclickToHref]){
+        NSString*jsStr = [NSString loadBundleResource:@"onclickToHref" ofType:@"js"];
+        [jsCode appendString: jsStr];
+        [jsCode appendString: @";\r\n"];
+    }
+    [jsCode appendString:[self ValueByWebKitParas:kWebKit_ProhibitFilterHtml]?@"document.getElementsByTagName('html')[0].outerHTML;":sharedFilterHtmlJS];
+    return jsCode;
+}
 -(void)SendHtml{
     __weak __typeof(self) weakSelf = self;
     NSString *url=self.webview.URL.absoluteString;
-    [self.webview evaluateJavaScript: self.isHomeUrl?@"document.getElementsByTagName('html')[0].outerHTML;":sharedFilterHtmlJS  completionHandler:^(id _Nullable innerHTML, NSError * _Nullable innererror) {
+    [self.webview evaluateJavaScript: self.isHomeUrl?@"document.getElementsByTagName('html')[0].outerHTML;":self.evaluateHtmlJS  completionHandler:^(id _Nullable innerHTML, NSError * _Nullable innererror) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             if (weakSelf.htmlCompletion) {
                 if ( weakSelf.isEnd) {
@@ -589,7 +617,7 @@ static  WKContentRuleList* sharedWKContentRuleList;
             if (weakSelf.isEnd) {
                 return;
             }
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 weakSelf.isEnd=YES;
                 if (weakSelf.endHandler) {
                     weakSelf.endHandler(YES);
@@ -603,7 +631,7 @@ static  WKContentRuleList* sharedWKContentRuleList;
 -(void)evaluateHtml:(HtmlDataCompleteHandler)completionHandler{
     __weak __typeof(self) weakSelf = self;
     NSString *url=self.webview.URL.absoluteString;
-    [self.webview evaluateJavaScript:self.isHomeUrl?@"document.getElementsByTagName('html')[0].outerHTML;":sharedFilterHtmlJS   completionHandler:^(id _Nullable innerHTML, NSError * _Nullable innererror) {
+    [self.webview evaluateJavaScript:self.isHomeUrl?@"document.getElementsByTagName('html')[0].outerHTML;":self.evaluateHtmlJS    completionHandler:^(id _Nullable innerHTML, NSError * _Nullable innererror) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             if (completionHandler) {
                 completionHandler(url,(NSHTTPURLResponse*)weakSelf.navigationResponse.response,innerHTML,innererror);
@@ -652,7 +680,7 @@ static  WKContentRuleList* sharedWKContentRuleList;
     webLog(@"decidePolicyForNavigationResponse %@ forMainFrame=%d",navigationResponse.response.URL, navigationResponse.forMainFrame);
     self.navigationResponse=navigationResponse;
     NSInteger statusCode= ((NSHTTPURLResponse *)navigationResponse.response).statusCode;
-    if (statusCode >=400) {
+    if (statusCode >=400 && [navigationResponse.response.URL.host isEqualToString:webView.URL.host]) {
         decisionHandler(WKNavigationResponsePolicyCancel);
         if (self.htmlCompletion) {
             self.htmlCompletion(webView.URL.absoluteString,(NSHTTPURLResponse*)self.navigationResponse.response,@"",[NSError errorWithDomain:NSOSStatusErrorDomain code:statusCode  userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"%ld - 找不到文件或目录或者服务器出现错误",(long)statusCode]}]);
@@ -686,8 +714,19 @@ static  WKContentRuleList* sharedWKContentRuleList;
     preferences.preferredContentMode=WKContentModeDesktop;
     decisionHandler(WKNavigationActionPolicyAllow,preferences);
 }
+- (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *__nullable credential))completionHandler {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        NSURLCredential *card = [[NSURLCredential alloc] initWithTrust:challenge.protectionSpace.serverTrust];
+        completionHandler(NSURLSessionAuthChallengeUseCredential,card);
+    });
+}
 -(void)clear{
+    if(self.webview==nil){
+        return;
+    }
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [self.webview.configuration.userContentController removeAllUserScripts];
+    [self.webview.configuration.userContentController removeAllContentRuleLists];
     self.htmlCompletion = nil;
     if (!self.isEnd) {
         self.isEnd=YES;
@@ -696,14 +735,20 @@ static  WKContentRuleList* sharedWKContentRuleList;
     self.endHandler  = nil;
     [self.webview stopLoading];
     [self.webview removeFromSuperview];
+    self.webview=nil;
 }
 -(void)cancel{
     if (NSThread.isMainThread) {
         [self clear];
     }else{
+        __block bool isWaitForEnd=NO;
         dispatch_async(dispatch_get_main_queue(), ^{
             [self clear];
+            isWaitForEnd=YES;
         });
+        while (!isWaitForEnd) {
+            [NSThread sleepForTimeInterval:0.1];
+        }
     }
 }
 -(void)dealloc{
@@ -791,11 +836,7 @@ static  WKContentRuleList* sharedWKContentRuleList;
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     self.isHomeEnd=YES;
     if (sharedautoSearchJS==nil) {
-        NSBundle *bundle = [NSBundle bundleForClass:OkHttpAndWebKitRequest.class];
-        NSURL *bundleURL = [bundle URLForResource:@"OkHttpAndWebKitRequest" withExtension:@"bundle"];
-        NSBundle *resourceBundle = [NSBundle bundleWithURL: bundleURL];
-        NSString *filePath =  [resourceBundle pathForResource:@"autoSubmitSearch" ofType:@"js"];
-        sharedautoSearchJS = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+        sharedautoSearchJS = [NSString loadBundleResource:@"autoSubmitSearch" ofType:@"js"];
     }
     [self.webview evaluateJavaScript:sharedautoSearchJS  completionHandler:^(id _Nullable innerHTML, NSError * _Nullable innererror) {
     }];
@@ -838,7 +879,7 @@ static  WKContentRuleList* sharedWKContentRuleList;
     webLog(@"decidePolicyForNavigationResponse %@ forMainFrame=%d",navigationResponse.response.URL, navigationResponse.forMainFrame);
     self.navigationResponse=navigationResponse;
     NSInteger statusCode= ((NSHTTPURLResponse *)navigationResponse.response).statusCode;
-    if (statusCode >=400) {
+    if (statusCode >=400 && [navigationResponse.response.URL.host isEqualToString:webView.URL.host]) {
         decisionHandler(WKNavigationResponsePolicyCancel);
         if(self.redirectCompletion){
             self.redirectCompletion(webView.URL.absoluteString,(NSHTTPURLResponse*)self.navigationResponse.response,[NSError errorWithDomain:NSOSStatusErrorDomain code:statusCode  userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"%ld - 找不到文件或目录或者服务器出现错误",(long)statusCode]}]);
@@ -862,7 +903,12 @@ static  WKContentRuleList* sharedWKContentRuleList;
         
     }
 }
-
+- (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *__nullable credential))completionHandler {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        NSURLCredential *card = [[NSURLCredential alloc] initWithTrust:challenge.protectionSpace.serverTrust];
+        completionHandler(NSURLSessionAuthChallengeUseCredential,card);
+    });
+}
 /**
  *  在发送请求之前，决定是否跳转
  *
@@ -894,9 +940,14 @@ static  WKContentRuleList* sharedWKContentRuleList;
     if (NSThread.isMainThread) {
         [self clear];
     }else{
+        __block bool isWaitForEnd=NO;
         dispatch_async(dispatch_get_main_queue(), ^{
             [self clear];
+            isWaitForEnd=YES;
         });
+        while (!isWaitForEnd) {
+            [NSThread sleepForTimeInterval:0.1];
+        }
     }
 }
 
