@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 +(NSURLSessionDataTask *)Request:(NSInteger)page     query:(NSString*)query htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion;
 +(NSURLSessionDataTask *)Request:(NSInteger)page     query:(NSString*)query  postString:(NSString*)postString WebKitParas:(NSDictionary*)webKitParas  htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion;
 +(NSURLSessionDataTask *)HeadRequest:(NSString*)requestUrl htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion;
- 
++(void)webRequestByURL:(BOOL)isHttpMode requestUrl:(NSString*)requestUrl WebKitParas:(NSDictionary*)webKitParas  htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion cancelBlock:(NetCancelBlock)cancelBlock;
 +(void)ApplyHttpHeaders:(NSMutableURLRequest *)request;
 +(AFHTTPSessionManager *)defualtSessionManager;
 +(NSString*)CurrentUserAgent;
@@ -56,10 +56,10 @@ typedef void (^webkit_End_Completion)(BOOL isend);
 -(void)AddAutoClickUserScript;
 @end
 @interface NovelWebKitRequest : NSObject
-@property(nonatomic,copy) HtmlDataCompleteHandler htmlCompletion;
-@property(nonatomic,strong) NSString *customUserAgent;
-@property(nonatomic,strong) NSString *referer;
-@property(nonatomic,strong) NSDictionary *webKitParas;
+@property(nonatomic,copy) HtmlDataCompleteHandler _Nullable htmlCompletion;
+@property(nonatomic,strong) NSString * _Nullable customUserAgent;
+@property(nonatomic,strong) NSString * _Nullable referer;
+@property(nonatomic,strong) NSDictionary * _Nullable webKitParas;
 
 -(void)requestWeb:(NSString*)url endHandler:(webkit_End_Completion)endHandler;
 -(void)evaluateHtml:(HtmlDataCompleteHandler)completionHandler;
