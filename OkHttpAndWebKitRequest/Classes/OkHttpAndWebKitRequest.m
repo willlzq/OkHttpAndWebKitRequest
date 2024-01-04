@@ -576,7 +576,11 @@ static  WKContentRuleList* sharedWKContentRuleList;
         return;
     }
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(SendHtml) object:nil];
-    [self performSelector:@selector(SendHtml) withObject:nil afterDelay:15];
+    if([self ValueByWebKitParas:kWebKitRequest_amplifyAfterDelayTime]){
+        [self performSelector:@selector(SendHtml) withObject:nil afterDelay:20];
+    }else{
+        [self performSelector:@selector(SendHtml) withObject:nil afterDelay:15];
+    }
 }
 
 /**
@@ -590,7 +594,11 @@ static  WKContentRuleList* sharedWKContentRuleList;
         return;
     }
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
-    [self performSelector:@selector(SendHtml) withObject:nil afterDelay:4.0];
+    if([self ValueByWebKitParas:kWebKitRequest_amplifyAfterDelayTime]){
+        [self performSelector:@selector(SendHtml) withObject:nil afterDelay:6.0];
+    }else{
+        [self performSelector:@selector(SendHtml) withObject:nil afterDelay:4.0];
+    }
 }
 -(NSString*)evaluateHtmlJS{
     NSMutableString *jsCode=[NSMutableString string];

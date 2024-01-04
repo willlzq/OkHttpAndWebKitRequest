@@ -18,6 +18,7 @@
 
 #define kWebKit_isLinkOnclickToHref @"__isLinkOnclickToHref__"
 #define kWebKit_ProhibitFilterHtml @"__ProhibitFilterHtml__"
+#define kWebKitRequest_amplifyAfterDelayTime @"amplifyAfterDelayTime"
 
 typedef void (^HtmlDataCompleteHandler)(NSString* url,NSHTTPURLResponse *httpResponse, id  jsonDocument, NSError *error);
 typedef BOOL(^NetCancelBlock)(id obj);
