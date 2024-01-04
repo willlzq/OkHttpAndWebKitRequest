@@ -487,14 +487,14 @@ static  WKContentRuleList* sharedWKContentRuleList;
             if (error==nil){
                 sharedWKContentRuleList=contentRuleList;
                 [userContentController addContentRuleList:sharedWKContentRuleList];
-                NSLog(@"启动无图模式成功-->%@",contentRuleList);
+                webLog(@"启动无图模式成功-->%@",contentRuleList);
             }else{
-                NSLog(@"启动无图模式失败-->%@",error);
+                webLog(@"启动无图模式失败-->%@",error);
             }
         }];
     }else{
         [userContentController addContentRuleList:sharedWKContentRuleList];
-        NSLog(@"启动无图模式成功");
+        webLog(@"启动无图模式成功");
     }
 }
 -(void)AddAutoClickUserScript{
@@ -502,7 +502,7 @@ static  WKContentRuleList* sharedWKContentRuleList;
     NSString*jsStr = [NSString loadBundleResource:@"clickPageListMulu" ofType:@"js"];
     WKUserScript *clickHiddenAllMuluScript = [[WKUserScript alloc] initWithSource:jsStr injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
     [userContentController addUserScript:clickHiddenAllMuluScript];
-    NSLog(@"启动隐藏目录自动点击成功");
+    webLog(@"启动隐藏目录自动点击成功");
 }
 @end
 @interface NovelWebKitRequest ()<WKNavigationDelegate>
@@ -590,6 +590,7 @@ static  WKContentRuleList* sharedWKContentRuleList;
  *  @param navigation 当前navigation
  */
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+    webLog(@"didFinishNavigation=%@ isLoading=%@",webView.title,webView.isLoading?@"YES":@"NO");
     if (self.htmlCompletion==nil || self.isEnd) {
         return;
     }
@@ -611,6 +612,7 @@ static  WKContentRuleList* sharedWKContentRuleList;
     return jsCode;
 }
 -(void)SendHtml{
+    webLog(@"evaluateJavaScript--SendHtml >:%@",self.webview.URL);
     __weak __typeof(self) weakSelf = self;
     NSString *url=self.webview.URL.absoluteString;
     [self.webview evaluateJavaScript: self.isHomeUrl?@"document.getElementsByTagName('html')[0].outerHTML;":self.evaluateHtmlJS  completionHandler:^(id _Nullable innerHTML, NSError * _Nullable innererror) {
