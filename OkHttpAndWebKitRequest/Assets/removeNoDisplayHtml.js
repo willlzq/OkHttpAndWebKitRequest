@@ -41,21 +41,22 @@ function getColorBg(element)
 }
 
 function traverseNodes(node){
-    try{
-        //元素隐藏，删除.包括script
-        if(window.getComputedStyle(node,null).display=="none"){
-            html=html.replace(node.outerHTML,"");
-        }
-    }catch(e){}
-    
-    try{
-        var nodecolor=getColorBg(node);
-        //元素颜色和背景颜色一样，删除；元素颜色和父元素的背景颜色一样，删除||getBg(node.parentNode)==nodecolor
-        if(getBg(node) ==nodecolor){
-            html=html.replace(node.outerHTML,"");
-        }
-    }catch(e){}
-    
+    if(document.body !=node){
+        try{
+            //元素隐藏，删除.包括script
+            if(window.getComputedStyle(node,null).display=="none"){
+                html=html.replace(node.outerHTML,"");
+            }
+        }catch(e){}
+        
+        try{
+            var nodecolor=getColorBg(node);
+            //元素颜色和背景颜色一样，删除；元素颜色和父元素的背景颜色一样，删除||getBg(node.parentNode)==nodecolor
+            if(getBg(node) ==nodecolor){
+                html=html.replace(node.outerHTML,"");
+            }
+        }catch(e){}
+    }
     if(node && node.hasChildNodes){
         //得到所有的子节点
         var sonnodes = node.childNodes;
