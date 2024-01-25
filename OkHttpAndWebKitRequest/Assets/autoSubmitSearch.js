@@ -1,7 +1,10 @@
 let inputList = document.querySelectorAll("input[type='text'],input[type='search']");
 var inputElement;
 for (let i = 0; i < inputList.length; i++) {
-    if (inputList[i].value.includes('搜') || inputList[i].placeholder.includes('搜')) {
+    if (inputList[i].value.includes('搜')
+        || inputList[i].placeholder.includes('搜')
+        || inputList[i].placeholder.includes('关键词')
+        ) {
         inputElement=inputList[i];
         inputElement.value='Diversity';
     }
