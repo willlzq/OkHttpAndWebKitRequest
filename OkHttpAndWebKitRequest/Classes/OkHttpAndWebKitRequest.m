@@ -598,7 +598,12 @@ static  WKContentRuleList* sharedWKContentRuleList;
     if([self ValueByWebKitParas:kWebKitRequest_amplifyAfterDelayTime]){
         [self performSelector:@selector(SendHtml) withObject:nil afterDelay:6.0];
     }else{
-        [self performSelector:@selector(SendHtml) withObject:nil afterDelay:4.0];
+        if(self.webKitParas && [self.webKitParas objectForKey:kWebKitRequest_SendHtmlAfterDelayTime]){
+            NSTimeInterval delay=[[self.webKitParas objectForKey:kWebKitRequest_SendHtmlAfterDelayTime] floatValue];
+            [self performSelector:@selector(SendHtml) withObject:nil afterDelay:delay];
+        }else{
+            [self performSelector:@selector(SendHtml) withObject:nil afterDelay:4.0];
+        }
     }
 }
 -(NSString*)evaluateHtmlJS{
