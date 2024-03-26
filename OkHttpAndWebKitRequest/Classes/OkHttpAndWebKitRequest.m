@@ -468,6 +468,7 @@ static  NSString* sharedautoSearchJS;
 }
 + (NSArray<NSString*>*)UserAgentList{
     return @[
+        @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15" ,
         @"Mozilla/5.0 (Macintosh; Intel Mac OS X 13_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36",
         @"Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.4896.60 Safari/537.36 Edg/100.0.1185.29",
         @"Mozilla/5.0 (Windows NT 11.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 SLBrowser/8.0.0.2242 SLBChan/105",
