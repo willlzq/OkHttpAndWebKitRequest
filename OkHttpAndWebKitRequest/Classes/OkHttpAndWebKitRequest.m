@@ -207,7 +207,7 @@ static  NSString* sharedautoSearchJS;
 
 }
 +(NSURLSessionDataTask *)Request:(NSInteger)page    query:(NSString*)query  postString:(NSString*)postString WebKitParas:(NSDictionary*)webKitParas  htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion{
-    return [OkHttpAndWebKitRequest  Request: page   query:query postString:nil WebKitParas:nil  beginRequestHandler:nil htmlCompletion:htmlCompletion] ;
+    return [OkHttpAndWebKitRequest  Request: page   query:query postString:postString WebKitParas:webKitParas  beginRequestHandler:nil htmlCompletion:htmlCompletion] ;
 
 }
 +(NSURLSessionDataTask *)Request:(NSInteger)page    query:(NSString*)query  postString:(NSString*)postString WebKitParas:(NSDictionary*)webKitParas beginRequestHandler:(HtmlData_BeginRequest_Handler)beginRequestHandler htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion{
