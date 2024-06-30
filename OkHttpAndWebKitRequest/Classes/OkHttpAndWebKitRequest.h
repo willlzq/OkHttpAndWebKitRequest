@@ -24,6 +24,7 @@
 typedef void (^HtmlDataCompleteHandler)(NSString* url,NSHTTPURLResponse *httpResponse, id  jsonDocument, NSError *error);
 typedef BOOL(^NetCancelBlock)(id obj);
 typedef void (^FetchSubmitUrlCompletionHandler)(NSString* redirectUrl,NSHTTPURLResponse *httpResponse,  NSError *error);
+typedef void (^HtmlData_BeginRequest_Handler)(NSMutableURLRequest *request);
 
 NS_ASSUME_NONNULL_BEGIN
 @interface NSData (Encoding)
@@ -44,8 +45,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSString (OkHttpAndWebKitRequestMD5)
 @end
 @interface OkHttpAndWebKitRequest : NSObject
++(NSURLSessionDataTask *)Request:(NSString*)query postString:(NSString*)postString beginRequestHandler:(HtmlData_BeginRequest_Handler)beginRequestHandler  htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion;
+
 +(NSURLSessionDataTask *)Request:(NSInteger)page     query:(NSString*)query htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion;
 +(NSURLSessionDataTask *)Request:(NSInteger)page     query:(NSString*)query  postString:(NSString*)postString WebKitParas:(NSDictionary*)webKitParas  htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion;
++(NSURLSessionDataTask *)Request:(NSInteger)page    query:(NSString*)query  postString:(NSString*)postString WebKitParas:(NSDictionary*)webKitParas beginRequestHandler:(HtmlData_BeginRequest_Handler)beginRequestHandler htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion;
+
 +(NSURLSessionDataTask *)HeadRequest:(NSString*)requestUrl htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion;
 +(void)webRequestByURL:(BOOL)isHttpMode requestUrl:(NSString*)requestUrl WebKitParas:(NSDictionary*)webKitParas  htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion cancelBlock:(NetCancelBlock)cancelBlock;
 +(void)ApplyHttpHeaders:(NSMutableURLRequest *)request;

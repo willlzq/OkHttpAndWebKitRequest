@@ -199,11 +199,19 @@ static  NSString* sharedUserAgent;
 static NSMutableDictionary<NSString*,NovelWebKitRequest *>* sharedWebviewDictionary;
 static  NSString* sharedFilterHtmlJS;
 static  NSString* sharedautoSearchJS;
-
++(NSURLSessionDataTask *)Request:(NSString*)query postString:(NSString*)postString beginRequestHandler:(HtmlData_BeginRequest_Handler)beginRequestHandler  htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion{
+    return [OkHttpAndWebKitRequest  Request: 1   query:query postString:postString WebKitParas:nil  beginRequestHandler:beginRequestHandler htmlCompletion:htmlCompletion] ;
+}
 +(NSURLSessionDataTask *)Request:(NSInteger)page   query:(NSString*)query   htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion{
-    return [OkHttpAndWebKitRequest  Request: page   query:query postString:nil WebKitParas:nil  htmlCompletion:htmlCompletion] ;
+     return [OkHttpAndWebKitRequest  Request: page   query:query postString:nil WebKitParas:nil  beginRequestHandler:nil htmlCompletion:htmlCompletion] ;
+
 }
 +(NSURLSessionDataTask *)Request:(NSInteger)page    query:(NSString*)query  postString:(NSString*)postString WebKitParas:(NSDictionary*)webKitParas  htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion{
+    return [OkHttpAndWebKitRequest  Request: page   query:query postString:nil WebKitParas:nil  beginRequestHandler:nil htmlCompletion:htmlCompletion] ;
+
+}
++(NSURLSessionDataTask *)Request:(NSInteger)page    query:(NSString*)query  postString:(NSString*)postString WebKitParas:(NSDictionary*)webKitParas beginRequestHandler:(HtmlData_BeginRequest_Handler)beginRequestHandler htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion{
+ 
     AFHTTPSessionManager *http=[OkHttpAndWebKitRequest   defualtSessionManager];
     NSString *requestUrl=query;
     webLog(@"requestUrl=%@",requestUrl);
@@ -224,6 +232,9 @@ static  NSString* sharedautoSearchJS;
     }
     if(webKitParas && [webKitParas objectForKey:kWebKit_Referer]){
         [request setValue:[webKitParas objectForKey:kWebKit_Referer]  forHTTPHeaderField:@"Referer" ];
+    }
+    if (beginRequestHandler) {
+        beginRequestHandler(request);
     }
     NSURLSessionDataTask *dataTask  =[http dataTaskWithRequest:request uploadProgress:^(NSProgress * _Nonnull uploadProgress) {
     } downloadProgress:^(NSProgress * _Nonnull downloadProgress) {
