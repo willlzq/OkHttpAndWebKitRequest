@@ -532,6 +532,11 @@ static  WKContentRuleList* sharedWKContentRuleList;
     if([self ValueByWebKitParas:kWebKit_isAutoClickMulu]){
         [self.webview AddAutoClickUserScript];
     }
+    if(self.webKitParas && [self.webKitParas objectForKey:kWebKit_injectionUserScriptJs]){
+        WKUserScript *userScript = [[WKUserScript alloc] initWithSource:[self.webKitParas objectForKey:kWebKit_injectionUserScriptJs] injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
+        [self.webview.configuration.userContentController addUserScript:userScript];
+    }
+    
     if(self.webKitParas && [self.webKitParas objectForKey:kWebKit_customUserAgent]){
         self.customUserAgent=[self.webKitParas objectForKey:kWebKit_customUserAgent];
     }
@@ -606,6 +611,7 @@ static  WKContentRuleList* sharedWKContentRuleList;
     if (self.htmlCompletion==nil || self.isEnd) {
         return;
     }
+ 
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     if([self ValueByWebKitParas:kWebKitRequest_amplifyAfterDelayTime]){
         [self performSelector:@selector(SendHtml) withObject:nil afterDelay:6.0];

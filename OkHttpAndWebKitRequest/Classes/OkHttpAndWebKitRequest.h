@@ -20,6 +20,8 @@
 #define kWebKit_ProhibitFilterHtml @"__ProhibitFilterHtml__"
 #define kWebKitRequest_amplifyAfterDelayTime @"amplifyAfterDelayTime"
 #define kWebKitRequest_SendHtmlAfterDelayTime @"SendHtmlAfterDelayTime"
+#define kWebKit_injectionUserScriptJs @"__injectionUserScriptJs__"//注入JS
+ 
 typedef void (^HtmlData_BeginRequest_Handler)(NSMutableURLRequest *request);
 typedef void (^HtmlDataCompleteHandler)(NSString* url,NSHTTPURLResponse *httpResponse, id  jsonDocument, NSError *error);
 typedef BOOL(^NetCancelBlock)(id obj);
