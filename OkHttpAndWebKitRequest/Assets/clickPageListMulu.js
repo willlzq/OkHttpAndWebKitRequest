@@ -1,5 +1,5 @@
 let a_List = document.querySelectorAll("a");
-var regular_hiddenElement = new RegExp("(点击|中间|隐藏|展开|章节){2,}", "i");
+var regular_hiddenElement = new RegExp("(点击|中间|隐藏|展开|全部|章节){2,}", "i");
 var aElement;
 for (let i = 0; i < a_List.length; i++) {
     let attributes=a_List[i].attributes;
