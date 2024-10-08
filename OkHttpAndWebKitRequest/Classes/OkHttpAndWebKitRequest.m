@@ -871,7 +871,17 @@ static  WKContentRuleList* sharedWKContentRuleList;
     if (sharedautoSearchJS==nil) {
         sharedautoSearchJS = [NSString loadBundleResource:@"autoSubmitSearch" ofType:@"js"];
     }
+    __weak __typeof(self) weakSelf = self;
     [self.webview evaluateJavaScript:sharedautoSearchJS  completionHandler:^(id _Nullable innerHTML, NSError * _Nullable innererror) {
+        if(!(innerHTML && [innerHTML isEqualToString:@"1"])){
+            if(weakSelf.redirectCompletion){
+                weakSelf.redirectCompletion(weakSelf.webview.URL.absoluteString,(NSHTTPURLResponse*)weakSelf.navigationResponse.response,innererror);
+                weakSelf.redirectCompletion = nil;
+            }
+        }else{
+            [NSObject cancelPreviousPerformRequestsWithTarget:weakSelf];
+            [weakSelf performSelector:@selector(timeOutWithError:) withObject:innererror afterDelay:5.0];
+        }
     }];
 }
 
@@ -884,13 +894,15 @@ static  WKContentRuleList* sharedWKContentRuleList;
  */
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
     webLog(@"didFailProvisionalNavigation=%@",error);
+    [self timeOutWithError:error];
+}
+-(void)timeOutWithError:(NSError *)error{
     if(self.redirectCompletion){
-        self.redirectCompletion(webView.URL.absoluteString,(NSHTTPURLResponse*)self.navigationResponse.response,error);
+        self.redirectCompletion(self.webview.URL.absoluteString,(NSHTTPURLResponse*)self.navigationResponse.response,error);
         self.redirectCompletion = nil;
     }
     self.isHomeEnd=YES;
 }
-
 /**
  *  接收到服务器跳转请求之后调用
  *
@@ -914,6 +926,7 @@ static  WKContentRuleList* sharedWKContentRuleList;
     NSInteger statusCode= ((NSHTTPURLResponse *)navigationResponse.response).statusCode;
     if (statusCode >=400 && [navigationResponse.response.URL.host isEqualToString:webView.URL.host]) {
         decisionHandler(WKNavigationResponsePolicyCancel);
+        [NSObject cancelPreviousPerformRequestsWithTarget:self];
         if(self.redirectCompletion){
             self.redirectCompletion(webView.URL.absoluteString,(NSHTTPURLResponse*)self.navigationResponse.response,[NSError errorWithDomain:NSOSStatusErrorDomain code:statusCode  userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"%ld - 找不到文件或目录或者服务器出现错误",(long)statusCode]}]);
             self.redirectCompletion = nil;
@@ -926,6 +939,7 @@ static  WKContentRuleList* sharedWKContentRuleList;
             decisionHandler(WKNavigationResponsePolicyAllow);
             return;
         }else  if(!isHomeUrl && self.isHomeEnd  && !self.isRedirectEnd  && [navigationResponse.response.URL.absoluteString containsString:self.requestUrl.host]){
+            [NSObject cancelPreviousPerformRequestsWithTarget:self];
             //发生了站内跳转
             self.isRedirectEnd=YES;
             if(self.redirectCompletion){

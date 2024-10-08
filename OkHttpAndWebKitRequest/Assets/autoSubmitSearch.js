@@ -9,6 +9,7 @@ for (let i = 0; i < inputList.length; i++) {
         inputElement.value='Diversity';
     }
 }
+var reVal='0';
 if(inputElement){
     let buttonList = document.querySelectorAll("button[type='button'],button[type='submit'],input[type='submit']");
     var buttonElement;
@@ -19,5 +20,7 @@ if(inputElement){
     }
     if(buttonElement){
         buttonElement.click();
+        reVal='1';
     }
 }
+reVal;
