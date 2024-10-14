@@ -15,8 +15,8 @@
 		18014DB82B411D250066C889 /* onclickToHref.js in Resources */ = {isa = PBXBuildFile; fileRef = 18014DB72B411D250066C889 /* onclickToHref.js */; };
 		181AD79D2B29509F0072BAD6 /* WebKitNoImageAndMedia.json in Resources */ = {isa = PBXBuildFile; fileRef = 181AD79C2B29509F0072BAD6 /* WebKitNoImageAndMedia.json */; };
 		1888A1782B2AC7C800EF22B4 /* clickPageListMulu.js in Resources */ = {isa = PBXBuildFile; fileRef = 1888A1772B2AC7C800EF22B4 /* clickPageListMulu.js */; };
-		189DD6692CBCF7960042B96D /* UIApplication+MainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 189DD6662CBCF5380042B96D /* UIApplication+MainWindow.m */; };
-		189DD66A2CBCF79D0042B96D /* UIApplication+MainWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 189DD6652CBCF5380042B96D /* UIApplication+MainWindow.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		189DD66D2CBCF9600042B96D /* UIApplication+MainWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 189DD66B2CBCF9600042B96D /* UIApplication+MainWindow.h */; };
+		189DD66E2CBCF9600042B96D /* UIApplication+MainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 189DD66C2CBCF9600042B96D /* UIApplication+MainWindow.m */; };
 		18AD75662ABDEF1B00E537A4 /* autoSubmitSearch.js in Resources */ = {isa = PBXBuildFile; fileRef = 18AD75642ABDEF0C00E537A4 /* autoSubmitSearch.js */; };
 		18AEFCE986FB74A0B6B092B3BA2267C6 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1FF3A63FDEB024682729FEC56B6207 /* UIImageView+AFNetworking.m */; };
 		1A35F4626C8C00AC79B455CC5B3072DE /* nsEUCTWProber.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 177A1CBB0F362C6A5410AB93C8AFB4DB /* nsEUCTWProber.cpp */; };
@@ -237,8 +237,8 @@
 		18014DB72B411D250066C889 /* onclickToHref.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = onclickToHref.js; path = OkHttpAndWebKitRequest/Assets/onclickToHref.js; sourceTree = "<group>"; };
 		181AD79C2B29509F0072BAD6 /* WebKitNoImageAndMedia.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = WebKitNoImageAndMedia.json; path = OkHttpAndWebKitRequest/Assets/WebKitNoImageAndMedia.json; sourceTree = "<group>"; };
 		1888A1772B2AC7C800EF22B4 /* clickPageListMulu.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = clickPageListMulu.js; path = OkHttpAndWebKitRequest/Assets/clickPageListMulu.js; sourceTree = "<group>"; };
-		189DD6652CBCF5380042B96D /* UIApplication+MainWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIApplication+MainWindow.h"; sourceTree = "<group>"; };
-		189DD6662CBCF5380042B96D /* UIApplication+MainWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+MainWindow.m"; sourceTree = "<group>"; };
+		189DD66B2CBCF9600042B96D /* UIApplication+MainWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIApplication+MainWindow.h"; path = "OkHttpAndWebKitRequest/Classes/UIApplication+MainWindow.h"; sourceTree = "<group>"; };
+		189DD66C2CBCF9600042B96D /* UIApplication+MainWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIApplication+MainWindow.m"; path = "OkHttpAndWebKitRequest/Classes/UIApplication+MainWindow.m"; sourceTree = "<group>"; };
 		18AD75642ABDEF0C00E537A4 /* autoSubmitSearch.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = autoSubmitSearch.js; path = OkHttpAndWebKitRequest/Assets/autoSubmitSearch.js; sourceTree = "<group>"; };
 		19019C3ECF52CB2539AF0E54A2963FF0 /* AFAutoPurgingImageCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFAutoPurgingImageCache.m; path = "UIKit+AFNetworking/AFAutoPurgingImageCache.m"; sourceTree = "<group>"; };
 		199CAC055D78A7096812EB98190317D5 /* UIButton+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIButton+AFNetworking.h"; path = "UIKit+AFNetworking/UIButton+AFNetworking.h"; sourceTree = "<group>"; };
@@ -847,17 +847,17 @@
 		F973CC1A01C9BE47E12E4D49FD06621B /* OkHttpAndWebKitRequest */ = {
 			isa = PBXGroup;
 			children = (
-				18014DB72B411D250066C889 /* onclickToHref.js */,
-				1888A1772B2AC7C800EF22B4 /* clickPageListMulu.js */,
-				181AD79C2B29509F0072BAD6 /* WebKitNoImageAndMedia.json */,
 				18AD75642ABDEF0C00E537A4 /* autoSubmitSearch.js */,
+				1888A1772B2AC7C800EF22B4 /* clickPageListMulu.js */,
 				090F5D76107FD075E951FD30E1D1F730 /* OkHttpAndWebKitRequest.h */,
 				F8C2A3BC353FDA7CA934C24F3F4898EE /* OkHttpAndWebKitRequest.m */,
-				189DD6652CBCF5380042B96D /* UIApplication+MainWindow.h */,
-				189DD6662CBCF5380042B96D /* UIApplication+MainWindow.m */,
-				C3C67F393E7CE435008E713A8AABBC79 /* removeNoDisplayHtml.js */,
+				18014DB72B411D250066C889 /* onclickToHref.js */,
 				5EAD2979A13CF63A2B30D0695C8B2596 /* Pod */,
+				C3C67F393E7CE435008E713A8AABBC79 /* removeNoDisplayHtml.js */,
 				4177C6D9C6B2EE613F09F06ADD76E021 /* Support Files */,
+				189DD66B2CBCF9600042B96D /* UIApplication+MainWindow.h */,
+				189DD66C2CBCF9600042B96D /* UIApplication+MainWindow.m */,
+				181AD79C2B29509F0072BAD6 /* WebKitNoImageAndMedia.json */,
 			);
 			name = OkHttpAndWebKitRequest;
 			path = ../..;
@@ -972,7 +972,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				572562F943479679156504A87CFFF029 /* OkHttpAndWebKitRequest.h in Headers */,
-				189DD66A2CBCF79D0042B96D /* UIApplication+MainWindow.h in Headers */,
+				189DD66D2CBCF9600042B96D /* UIApplication+MainWindow.h in Headers */,
 				B459241A24E4D9F99D2DB6D8E2970455 /* OkHttpAndWebKitRequest-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1255,7 +1255,7 @@
 			files = (
 				A3C37B0385AC89CF2EF370520A3CDF33 /* OkHttpAndWebKitRequest.m in Sources */,
 				9036EB6985B52503AC5555CFEEACA94B /* OkHttpAndWebKitRequest-dummy.m in Sources */,
-				189DD6692CBCF7960042B96D /* UIApplication+MainWindow.m in Sources */,
+				189DD66E2CBCF9600042B96D /* UIApplication+MainWindow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
