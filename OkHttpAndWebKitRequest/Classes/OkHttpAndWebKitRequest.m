@@ -9,6 +9,7 @@
 #import "NSData+GZIP.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "UniversalDetector.h"
+#import "UIApplication+MainWindow.h"
 
 @implementation NSData (Encoding)
 - (NSString *)ChinaString
@@ -546,9 +547,9 @@ static  WKContentRuleList* sharedWKContentRuleList;
     
     self.endHandler=endHandler;
     self.webview.navigationDelegate=self;
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    UIWindow *window = [UIApplication sharedApplication].mainWindow;
     if (  (int)[window.subviews indexOfObject:self.webview]<0) {
-        self.webview.bounds= CGRectMake([UIApplication sharedApplication].keyWindow.bounds.size.width*2.25, [UIApplication sharedApplication].keyWindow.bounds.size.height*2.25, window.bounds.size.width, window.bounds.size.height) ;
+        self.webview.bounds= CGRectMake([UIApplication sharedApplication].mainWindow.bounds.size.width*2.25, [UIApplication sharedApplication].mainWindow.bounds.size.height*2.25, window.bounds.size.width, window.bounds.size.height) ;
         self.webview.hidden=YES;
         [window addSubview:self.webview];
         [window sendSubviewToBack: self.webview];
@@ -802,14 +803,15 @@ static  WKContentRuleList* sharedWKContentRuleList;
 @implementation AutoSubmitSearchByWebKit
 
 -(void)request:(NSString*)url{
+ 
     self.isHomeEnd=NO;
     self.isRedirectEnd=NO;
     self.webview=[WKWebView  new];
     [self.webview addNoImageContentRule];
     self.webview.navigationDelegate=self;
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    UIWindow *window = [UIApplication sharedApplication].mainWindow;
     if ((int)[window.subviews indexOfObject:self.webview]<0) {
-        self.webview.bounds= CGRectMake([UIApplication sharedApplication].keyWindow.bounds.size.width*2.25, [UIApplication sharedApplication].keyWindow.bounds.size.height*2.25, window.bounds.size.width, window.bounds.size.height) ;
+        self.webview.bounds= CGRectMake([UIApplication sharedApplication].mainWindow.bounds.size.width*2.25, [UIApplication sharedApplication].mainWindow.bounds.size.height*2.25, window.bounds.size.width, window.bounds.size.height) ;
         self.webview.hidden=YES;
         
         [window addSubview:self.webview];

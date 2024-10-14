@@ -15,6 +15,8 @@
 		18014DB82B411D250066C889 /* onclickToHref.js in Resources */ = {isa = PBXBuildFile; fileRef = 18014DB72B411D250066C889 /* onclickToHref.js */; };
 		181AD79D2B29509F0072BAD6 /* WebKitNoImageAndMedia.json in Resources */ = {isa = PBXBuildFile; fileRef = 181AD79C2B29509F0072BAD6 /* WebKitNoImageAndMedia.json */; };
 		1888A1782B2AC7C800EF22B4 /* clickPageListMulu.js in Resources */ = {isa = PBXBuildFile; fileRef = 1888A1772B2AC7C800EF22B4 /* clickPageListMulu.js */; };
+		189DD6672CBCF5380042B96D /* UIApplication+MainWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 189DD6652CBCF5380042B96D /* UIApplication+MainWindow.h */; };
+		189DD6682CBCF5380042B96D /* UIApplication+MainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 189DD6662CBCF5380042B96D /* UIApplication+MainWindow.m */; };
 		18AD75662ABDEF1B00E537A4 /* autoSubmitSearch.js in Resources */ = {isa = PBXBuildFile; fileRef = 18AD75642ABDEF0C00E537A4 /* autoSubmitSearch.js */; };
 		18AEFCE986FB74A0B6B092B3BA2267C6 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1FF3A63FDEB024682729FEC56B6207 /* UIImageView+AFNetworking.m */; };
 		1A35F4626C8C00AC79B455CC5B3072DE /* nsEUCTWProber.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 177A1CBB0F362C6A5410AB93C8AFB4DB /* nsEUCTWProber.cpp */; };
@@ -235,6 +237,8 @@
 		18014DB72B411D250066C889 /* onclickToHref.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = onclickToHref.js; path = OkHttpAndWebKitRequest/Assets/onclickToHref.js; sourceTree = "<group>"; };
 		181AD79C2B29509F0072BAD6 /* WebKitNoImageAndMedia.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = WebKitNoImageAndMedia.json; path = OkHttpAndWebKitRequest/Assets/WebKitNoImageAndMedia.json; sourceTree = "<group>"; };
 		1888A1772B2AC7C800EF22B4 /* clickPageListMulu.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = clickPageListMulu.js; path = OkHttpAndWebKitRequest/Assets/clickPageListMulu.js; sourceTree = "<group>"; };
+		189DD6652CBCF5380042B96D /* UIApplication+MainWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIApplication+MainWindow.h"; sourceTree = "<group>"; };
+		189DD6662CBCF5380042B96D /* UIApplication+MainWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+MainWindow.m"; sourceTree = "<group>"; };
 		18AD75642ABDEF0C00E537A4 /* autoSubmitSearch.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = autoSubmitSearch.js; path = OkHttpAndWebKitRequest/Assets/autoSubmitSearch.js; sourceTree = "<group>"; };
 		19019C3ECF52CB2539AF0E54A2963FF0 /* AFAutoPurgingImageCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFAutoPurgingImageCache.m; path = "UIKit+AFNetworking/AFAutoPurgingImageCache.m"; sourceTree = "<group>"; };
 		199CAC055D78A7096812EB98190317D5 /* UIButton+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIButton+AFNetworking.h"; path = "UIKit+AFNetworking/UIButton+AFNetworking.h"; sourceTree = "<group>"; };
@@ -849,6 +853,8 @@
 				18AD75642ABDEF0C00E537A4 /* autoSubmitSearch.js */,
 				090F5D76107FD075E951FD30E1D1F730 /* OkHttpAndWebKitRequest.h */,
 				F8C2A3BC353FDA7CA934C24F3F4898EE /* OkHttpAndWebKitRequest.m */,
+				189DD6652CBCF5380042B96D /* UIApplication+MainWindow.h */,
+				189DD6662CBCF5380042B96D /* UIApplication+MainWindow.m */,
 				C3C67F393E7CE435008E713A8AABBC79 /* removeNoDisplayHtml.js */,
 				5EAD2979A13CF63A2B30D0695C8B2596 /* Pod */,
 				4177C6D9C6B2EE613F09F06ADD76E021 /* Support Files */,
@@ -887,6 +893,7 @@
 			files = (
 				347731E8D4C4F27FC53DDFAC590481D6 /* AFAutoPurgingImageCache.h in Headers */,
 				EE3B8613CDD20D58260C22D21BC61F38 /* AFCompatibilityMacros.h in Headers */,
+				189DD6672CBCF5380042B96D /* UIApplication+MainWindow.h in Headers */,
 				584233A4CEC7C9AA382A1A43C26B87EE /* AFHTTPSessionManager.h in Headers */,
 				E8372DA8FDA0830EF5FF160493C0B37A /* AFImageDownloader.h in Headers */,
 				ED0B81FF1DEC0B138947EA93D22E5A4E /* AFNetworkActivityIndicatorManager.h in Headers */,
@@ -1273,6 +1280,7 @@
 			files = (
 				801724F329AA434F8BB6A11E96E5805A /* AFAutoPurgingImageCache.m in Sources */,
 				33B9A195FDB315F18465CB1BA24D74A9 /* AFHTTPSessionManager.m in Sources */,
+				189DD6682CBCF5380042B96D /* UIApplication+MainWindow.m in Sources */,
 				FA57C7B9116769DBBCAEE173060683A3 /* AFImageDownloader.m in Sources */,
 				BAB08D6748C698A6AA6DC7D6A2BFFE49 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				4DCB59DE84A69063E9485E4D8BF8C637 /* AFNetworking-dummy.m in Sources */,
