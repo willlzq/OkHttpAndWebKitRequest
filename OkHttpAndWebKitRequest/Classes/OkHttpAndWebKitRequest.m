@@ -382,6 +382,10 @@ static  NSString* sharedautoSearchJS;
     return nil;
 }
 +(void)webRequestByURL:(BOOL)isHttpMode requestUrl:(NSString*)requestUrl WebKitParas:(NSDictionary*)webKitParas  htmlCompletion: (HtmlDataCompleteHandler)htmlCompletion cancelBlock:(NetCancelBlock)cancelBlock{
+    if(requestUrl.length<=7){
+        htmlCompletion(requestUrl,nil,nil,[NSError errorWithDomain:NSOSStatusErrorDomain code:500  userInfo:@{NSLocalizedDescriptionKey:@"Bad Url"}]);
+        return;
+    }
     if (isHttpMode) {
         NSURLSessionDataTask * datatask=  [OkHttpAndWebKitRequest   Request:0   query:requestUrl postString:nil WebKitParas:webKitParas  htmlCompletion:htmlCompletion];
         if (cancelBlock(datatask)) {
