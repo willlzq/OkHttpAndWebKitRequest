@@ -671,7 +671,7 @@ static  WKContentRuleList* sharedWKContentRuleList;
     NSString *url=self.webview.URL.absoluteString;
     [self.webview evaluateJavaScript:self.isHomeUrl?@"document.getElementsByTagName('html')[0].outerHTML;":self.evaluateHtmlJS    completionHandler:^(id _Nullable innerHTML, NSError * _Nullable innererror) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            if (completionHandler) {
+            if (weakSelf && completionHandler) {
                 completionHandler(url,(NSHTTPURLResponse*)weakSelf.navigationResponse.response,innerHTML,innererror);
             }
         });
